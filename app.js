@@ -1,21 +1,17 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const path = require('path');
 const session = require('express-session');
 const dotenv = require('dotenv');
-const passport = require('passport');
+
 
 dotenv.config();
-const pageRouter = require('./routes/page');
-const authRouter = require('./routes/auth');
 const { sequelize } = require('./models');
-const passportConfig = require('./passport');
+const router = express.Router();;
 
 const app = express();
-passportConfig(); // 패스포트 설정
-app.set('port', process.env.PORT || 3000);
-sequelize.sync({ force: false })
+app.set('port', process.env.PORT || 3001);
+sequelize.sync({ force: false }) //force가 True이면 서버 실행 시마다 테이블 재생성
   .then(() => {
     console.log('데이터베이스 연결 성공');
   })
@@ -24,24 +20,14 @@ sequelize.sync({ force: false })
   });
 
 app.use(morgan('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(session({
-  resave: false,
-  saveUninitialized: false,
-  secret: process.env.COOKIE_SECRET,
-  cookie: {
-    httpOnly: true,
-    secure: false,
-  },
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
-app.use('/', pageRouter);
-app.use('/auth', authRouter);
+app.use('/', router);
+app.use('/auth', require('./routes/auth'));
+app.use('/user', require('./routes/user'));
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

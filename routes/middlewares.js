@@ -1,17 +1,11 @@
-//로그인 여부 검사
-exports.isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated()) { //로그인 중이면 true
-      next();
-    } else {
-      res.status(403).send('로그인 필요');
-    }
-  };
-  
-  exports.isNotLoggedIn = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-      next();
-    } else {
-      const message = encodeURIComponent('로그인한 상태입니다.');
-      res.redirect(`/?error=${message}`);
-    }
-  };
+const User = require('../models/user');
+
+//토큰 정보는 req.headers["x-access-token"]
+
+exports.accessToken = (req, res) => {
+  const user_token = req.headers["x-access-token"];
+  const userInfo = User.findOne({
+    where: {token: user_token},
+  })
+  return res.json(userInfo)
+};
