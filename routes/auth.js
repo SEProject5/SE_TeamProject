@@ -22,7 +22,7 @@ router.post('/join', async (req, res, next) => {
       }
     }
     const user_token = await Jwt.create(req.body.id);
-    console.log(user_token);
+    console.log(user_token.user_token);
     const hash = bcrypt.hashSync(req.body.password, 10) //비밀번호 암호화
     console.log(hash);
     await User.create({
@@ -34,7 +34,7 @@ router.post('/join', async (req, res, next) => {
       address: null,
       addressDetail: null,
       phone: null,
-      token: String(user_token),
+      token: user_token.user_token,
       user_type: "normal",
     });
     return res.status(200).send({message: "회원가입이 완료되었습니다:)"});

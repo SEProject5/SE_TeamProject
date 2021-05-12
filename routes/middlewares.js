@@ -2,10 +2,15 @@ const User = require('../models/user');
 
 //토큰 정보는 req.headers["x-access-token"]
 
-exports.accessToken = (req, res) => {
-  const user_token = req.headers["x-access-token"];
-  const userInfo = User.findOne({
+exports.IsAdmin = async(req, res, next) => {
+  const user_token = await req.headers["x-access-token"];
+  console.log('user_token:', user_token);
+  const userInfo = await User.findOne({
+    attributes: ['user_type'],
     where: {token: user_token},
   })
-  return res.json(userInfo)
+  console.log('userInfo: ', userInfo.user_type);
+  console.log('userInfo: ', userInfo.user_type === "admin");
+  if(userInfo.user_type === "admin") { next();
+  } else res.status(401).send({ message: "접근 권한이 없습니다."});
 };

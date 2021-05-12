@@ -2,58 +2,44 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const Jwt = require('../models/jwt');
-
+const { IsAdmin } = require('./middlewares');
 const router = express.Router();
 
 // 비밀번호 정규식 설정 (영문(소문자), 숫자, 특수문자 조합, 8~16자리)
 const chk_password = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/;
 
 //유저 생성 하기
-router.post('/', async (req, res, next) => {
-    let userInfo = req.userInfo
-    if(!userInfo){
-        //유효하지 않은 사용자
-        return res.status(401).send({ message: "접근 권한이 없습니다."});
-      } else {
-        if(userInfo.user_type === "admin") {
-            console.log('post /user OK');
-            console.log(req.body.id);
-            try {
-                const exUser = await User.findOne({ where: { id: req.body.id } });
-                if (exUser) { //id가 존재하면 
-                return res.status(400).send({message: "이미 존재하는 id 입니다."});
-                } else {
-                // 비밀번호 정규식 확인 
-                if (chk_password.test(req.body.password) === false) {
-                    throw Error("비밀번호는 영문(소문자), 숫자, 특수문자 조합의 8~16자리여야 합니다."); 
-                }
-                }
-                const user_token = await Jwt.create(req.body.id);
-                console.log(user_token);
-                const hash = bcrypt.hashSync(req.body.password, 10) //비밀번호 암호화
-                console.log(hash);
-                await User.create({
-                    id: req.body.id,
-                    password: hash,
-                    name: req.body.name,
-                    email: req.body.email,
-                    zip_code: req.body.zip_code,
-                    address: req.body.address,
-                    addressDetail: req.body.addressDetail,
-                    phone: req.body.phone,
-                    token: String(user_token),
-                    user_type: "normal",
-                });
-                user = await User.findAll({ 
-                    attributes: ['id','password','name','email','zip_code','address','addressDetail','phone'],
-                    where: { id: req.body.id},
-                });
-                console.log(user);
-                return res.json(user);
-            } catch (err) {
-                return res.status(400).json(err);
-            }
+router.post('/', IsAdmin, async (req, res, next) => {
+    try {
+        console.log(req.body.id);
+        const exUser = await User.findOne({ where: { id: req.body.id } });
+        if (exUser) { //id가 존재하면 
+        return res.status(400).send({message: "이미 존재하는 id 입니다."});
+        } else {
+        // 비밀번호 정규식 확인 
+        if (chk_password.test(req.body.password) === false) {
+            throw Error("비밀번호는 영문(소문자), 숫자, 특수문자 조합의 8~16자리여야 합니다."); 
         }
+        }
+        const user_token = await Jwt.create(req.body.id);
+        console.log(user_token);
+        const hash = bcrypt.hashSync(req.body.password, 10) //비밀번호 암호화
+        console.log(hash);
+        await User.create({
+            id: req.body.id,
+            password: hash,
+            name: req.body.name,
+            email: req.body.email,
+            zip_code: req.body.zip_code,
+            address: req.body.address,
+            addressDetail: req.body.addressDetail,
+            phone: req.body.phone,
+            token: user_token.user_token,
+            user_type: "normal",
+        });
+        return res.status(200).send({message: `${req.body.id}유저를 생성하였습니다:)`});
+    } catch (err) {
+        return res.status(400).json(err);
     }
 });
 
