@@ -5,7 +5,6 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const router = express.Router();
 
-
 var createError = require('http-errors');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -19,6 +18,7 @@ var sanitizeHtml = require('sanitize-html');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 let productsRouter = require('./routes/products');
+let categoryRouter = require('./routes/categories');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,6 +33,7 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/products', productsRouter);
+app.use('/categories', categoryRouter);
 
 app.use('/apidoc', express.static(__dirname + '/apidoc'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -41,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req, res, next) {
     next(createError(404));
 });
+
 
 // error handler
 app.use(function(err, req, res, next) {
