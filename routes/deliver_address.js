@@ -10,9 +10,12 @@ router.post('/', async (req,res,next) => {
     try {
         await DeliverAddress.create({
             user_id: req.body.user_id,
+            address_name: req.body.address_name,
+            receiver_phone: req.body.receiver_phone,
             zip_code: req.body.zip_code,
             address: req.body.address,
             address_detail: req.body.address_detail,
+            address_type: req.body.address_type,
         });
         return res.status(200).send({message: `배송지를 등록하였습니다:)`});
     } catch (err) {
@@ -38,9 +41,13 @@ router.patch('/:id', async (req,res,next) => {
     console.log('patch /deliver_address OK');
     try {
         const deliver_address = await DeliverAddress.update({
+            user_id: req.body.user_id,
+            address_name: req.body.address_name,
+            receiver_phone: req.body.receiver_phone,
             zip_code: req.body.zip_code,
             address: req.body.address,
             address_detail: req.body.address_detail,
+            address_type: req.body.address_type,
         },
         {
             where: {id: req.params.id},
@@ -52,7 +59,7 @@ router.patch('/:id', async (req,res,next) => {
 });
 
 //배송지 삭제
-router.delete('/:id', IsAdmin, async (req,res,next) => {
+router.delete('/:id', /*IsAdmin,*/ async (req,res,next) => {
     console.log('delete /deliver_address OK')
     try {
         await DeliverAddress.destroy({

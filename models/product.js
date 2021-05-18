@@ -6,7 +6,7 @@ module.exports = class Product extends Sequelize.Model {
       p_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        allowNull: false,
+        autoIncrement: true,
       },
       p_name: {
         type: Sequelize.STRING(25),
@@ -27,8 +27,14 @@ module.exports = class Product extends Sequelize.Model {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      image: {
-        type: Sequelize.STRING(200),
+      file: {
+        type: Sequelize.STRING(100),
+      },
+      exist: {
+        type: Sequelize.INTEGER,
+      },
+      regist_time: {
+        type: Sequelize.DATE,
       }
     }, {
       sequelize,

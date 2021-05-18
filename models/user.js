@@ -43,7 +43,5 @@ module.exports = class User extends Sequelize.Model {
     });
   }
 
-  static associate(db) {
-    db.User.hasMany(db.DeliverAddress, {foreignKey: 'user_id', sourceKey: 'id'});
-  }
+  static associate(db) {}
 };
