@@ -30,14 +30,38 @@ router.post('/join', async (req, res, next) => {
       password: hash,
       name: req.body.name,
       email: req.body.email,
-      zip_code: null,
-      address: null,
-      addressDetail: null,
-      phone: null,
       token: user_token.user_token,
       user_type: "normal",
     });
     return res.status(200).send({message: "회원가입이 완료되었습니다:)"});
+  } catch (error) {
+      return res.status(400).json(error);
+  }
+});
+
+//아이디 확인 라우터
+router.get('/join/checkId', async (req, res, next) => {
+  try {
+    const exUser = await User.findOne({ where: { id: req.body.id } });
+    if (exUser) { //id가 존재하면 
+      return res.status(400).send({message: "이미 존재하는 아이디입니다."});
+    } else {
+        return res.status(200).send({message: "사용하실 수 있는 아이디입니다."});
+      }
+  } catch (error) {
+      return res.status(400).json(error);
+  }
+});
+
+//이메일 확인 라우터
+router.get('/join/checkEmail', async (req, res, next) => {
+  try {
+    const exUser = await User.findOne({ where: { email: req.body.email } });
+    if (exUser) { //id가 존재하면 
+      return res.status(400).send({message: "이미 존재하는 이메일입니다."});
+    } else {
+        return res.status(200).send({message: "사용하실 수 있는 이메일입니다."});
+      }
   } catch (error) {
       return res.status(400).json(error);
   }
@@ -57,19 +81,12 @@ router.post('/login', async (req, res) => {
           res.status(403).send({message : "비밀번호가 일치하지 않습니다."});
       }
     }else{
-        res.status(403).send({message : "이메일 또는 비밀번호가 일치하지 않습니다."});
+        res.status(403).send({message : "아이디 또는 비밀번호가 일치하지 않습니다."});
     }
   } catch (err) {
       console.log(err);
       res.status(400).json(err);
   }
 });
-
-/*
-router.get('/logout', (req, res) => {
-  console.log('post /login OK');
-  req.logout();
-  return res.status(200).send({message: 'logout success'});
-});*/
 
 module.exports = router;

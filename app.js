@@ -1,7 +1,6 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const session = require('express-session');
 const dotenv = require('dotenv');
 
 
@@ -27,6 +26,8 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use('/', router);
 app.use('/auth', require('./routes/auth'));
 app.use('/user', require('./routes/user'));
+app.use('/banner', require('./routes/banner'));
+app.use('/deliver_address', require('./routes/deliver_address'));
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

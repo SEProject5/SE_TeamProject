@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "root",
-    "password": "dmlwls125!",
+    "username": "team5",
+    "password": "team5",
     "database": "shoppers",
-    "host": "127.0.0.1",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
