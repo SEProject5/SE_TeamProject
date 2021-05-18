@@ -30,21 +30,17 @@ router.post('/', IsAdmin, async (req, res, next) => {
             password: hash,
             name: req.body.name,
             email: req.body.email,
-            zip_code: req.body.zip_code,
-            address: req.body.address,
-            addressDetail: req.body.addressDetail,
-            phone: req.body.phone,
             token: user_token.user_token,
             user_type: "normal",
         });
-        return res.status(200).send({message: `${req.body.id}유저를 생성하였습니다:)`});
+        return res.status(200).send({message: `${req.body.id} 유저를 생성하였습니다:)`});
     } catch (err) {
         return res.status(400).json(err);
     }
 });
 
 //전체 유저 목록보기
-router.get('/', async (req,res,next) => {
+router.get('/', IsAdmin, async (req,res,next) => {
     console.log('get /user OK')
     try {
         users = await User.findAll({});
@@ -57,7 +53,7 @@ router.get('/', async (req,res,next) => {
 router.get('/:id', async (req, res, next) => {
     console.log('get /user/:id OK')
     try {
-        const user = await User.findOne({where: {id: req.body.id},});
+        const user = await User.findOne({where: {id: req.params.id},});
         return res.json(user);
     } catch (err) {
         return res.status(400).json(err);
@@ -65,25 +61,21 @@ router.get('/:id', async (req, res, next) => {
 });
 
 //유저 정보 수정하기
-router.patch('/', async (req, res, next) => {
-    console.log('patch /user OK')
+router.patch('/:id', IsAdmin, async (req, res, next) => {
+    console.log('patch /user OK');
     try {
         if (chk_password.test(req.body.password) === false) {
             throw Error("비밀번호는 영문(소문자), 숫자, 특수문자 조합의 8~16자리여야 합니다."); 
         }
         await User.update({
-            id: req.body.id,
+            id: req.params.id,
             password: req.body.password,
             name: req.body.name,
             email: req.body.email,
-            zip_code: req.body.zip_code,
-            address: req.body.address,
-            addressDetail: req.body.addressDetail,
-            phone: req.body.addressDetail,
         }, {
-            where: {id: req.body.id},
+            where: {id: req.params.id},
         });
-        user = await User.findOne({where: {id: req.body.id}})
+        user = await User.findOne({where: {id: req.params.id}})
         return res.json(user);
     } catch (err) {
         return res.status(400).json(err);
@@ -91,14 +83,19 @@ router.patch('/', async (req, res, next) => {
 });
 
 //유저 삭제하기
-router.delete('/', async (req,res,next) => {
+router.delete('/:id', IsAdmin,async (req,res,next) => {
     console.log('delete /user OK')
     try {
-        await User.destroy({
-            where: {id: req.body.id},
-        });
-        user = await User.findOne({where: {id: req.body.id}})
-        return res.status(200).send(`${req.body.id}님의 계정이 삭제되었습니다.`);
+        user = await User.findOne({where: {id: req.params.id}})
+        console.log(user);
+        if(user) {
+            await User.destroy({
+                where: {id: req.params.id},
+            });
+            return res.status(200).send(`${req.params.id}님의 계정이 삭제되었습니다.`);
+        } else {
+            return res.status(401).send(`id가 ${req.params.id}인 계정이 존재하지 않습니다.`);
+        }
     } catch (err) {
         return res.status(400).json(err);
     }
