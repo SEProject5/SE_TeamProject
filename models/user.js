@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { destroy, hasMany } = require('./banner');
 
 module.exports = class User extends Sequelize.Model {
   static init(sequelize) {
@@ -10,7 +11,7 @@ module.exports = class User extends Sequelize.Model {
         unique: true,
       },
       password: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       name: {
@@ -22,29 +23,27 @@ module.exports = class User extends Sequelize.Model {
         allowNull: false,
         unique: true,
       },
-      zip_code: {
-        type: Sequelize.STRING(7),
-        allowNull: true,
+      token: {
+        type: Sequelize.STRING(500),
+        allowNull: false,
       },
-      address: {
-        type: Sequelize.STRING(100),
-        allowNull: true,
-      },
-      phone: {
-        type: Sequelize.STRING(20),
-        allowNull: true,
+      user_type: {
+        type: Sequelize.STRING(10), //normal, admin, domain
+        allowNull: false,
       },
     }, {
       sequelize,
       timestamps: true, //createdAt, updatedAt 생성
       underscored: false,
       modelName: 'User',
-      tableName: 'users',
+      tableName: 'user',
       paranoid: true, //deletedAt 생성
       charset: 'utf8',
-      collate: 'utf8_general_ci',
+      collate: 'utf8_bin',
     });
   }
 
-  static associate(db) {}
+  static associate(db) {
+    db.User.hasMany(db.DeliverAddress, {foreignKey: 'user_id', sourceKey: 'id'});
+  }
 };

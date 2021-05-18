@@ -1,17 +1,16 @@
-//로그인 여부 검사
-exports.isLoggedIn = (req, res, next) => {
-    if (req.isAuthenticated()) { //로그인 중이면 true
-      next();
-    } else {
-      res.status(403).send('로그인 필요');
-    }
-  };
-  
-  exports.isNotLoggedIn = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-      next();
-    } else {
-      const message = encodeURIComponent('로그인한 상태입니다.');
-      res.redirect(`/?error=${message}`);
-    }
-  };
+const User = require('../models/user');
+
+//토큰 정보는 req.headers["x-access-token"]
+
+exports.IsAdmin = async(req, res, next) => {
+  const user_token = await req.headers["x-access-token"];
+  console.log('user_token:', user_token);
+  const userInfo = await User.findOne({
+    attributes: ['user_type'],
+    where: {token: user_token},
+  })
+  console.log('userInfo: ', userInfo.user_type);
+  console.log('userInfo: ', userInfo.user_type === "admin");
+  if(userInfo.user_type === "admin") { next();
+  } else res.status(401).send({ message: "접근 권한이 없습니다."});
+};
