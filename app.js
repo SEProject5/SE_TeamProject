@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 const { sequelize } = require('./models');
-const router = express.Router();;
+const router = express.Router();
 
 const app = express();
 app.set('port', process.env.PORT || 3000);
@@ -24,7 +24,6 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-
 app.use('/', router);
 app.use('/auth', require('./routes/auth'));
 app.use('/user', require('./routes/user'));

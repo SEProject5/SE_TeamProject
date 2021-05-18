@@ -1,7 +1,12 @@
-let express = require('express');
-let app = express();
-let router = express.Router();
+const express = require('express');
+const app = express();
+// const bcrypt = require('bcrypt');
+const router = express.Router();
 let mysql = require('mysql2');
+const { IsAdmin } = require('./middlewares');
+
+
+
 var pool = mysql.createPool({
     host:'localhost',
     user:'root',
@@ -58,7 +63,7 @@ router.get('/:cat_id', function (req, res, next){
 
 })
 
-router.post('/', function (req, res, next){
+router.post('/',IsAdmin , function (req, res, next){
     let { cat_name} = req.body;
     pool.query('INSERT INTO category (cat_name,cat_pid) VALUES(?, ?)',
         [cat_name,0], function (err, result){       //[]
@@ -68,7 +73,7 @@ router.post('/', function (req, res, next){
         });
 })
 
-router.patch('/:cat_id', function (req, res, next){
+router.patch('/:cat_id',IsAdmin , function (req, res, next){
     let { cat_name,cat_pid } = req.body;
     pool.query('UPDATE category SET cat_name=?,cat_pid=? WHERE cat_id=?',
         [cat_name,cat_pid, req.params.cat_id],
@@ -80,7 +85,7 @@ router.patch('/:cat_id', function (req, res, next){
             res.end();
         })
 })
-router.delete('/:cat_id', function (req, res, next){
+router.delete('/:cat_id',IsAdmin , function (req, res, next){
     pool.query('DELETE FROM category WHERE cat_id = ?', req.params.cat_id, function(error, result){
         if(error){ throw error;}
         return res.status(200).send(result);
@@ -88,4 +93,3 @@ router.delete('/:cat_id', function (req, res, next){
     });
 })
 module.exports = router;
-
