@@ -10,7 +10,7 @@ module.exports = class User extends Sequelize.Model {
         unique: true,
       },
       password: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       name: {
@@ -30,9 +30,21 @@ module.exports = class User extends Sequelize.Model {
         type: Sequelize.STRING(100),
         allowNull: true,
       },
+      addressDetail: {
+        type: Sequelize.STRING(100),
+        allowNull: true,
+      },
       phone: {
         type: Sequelize.STRING(20),
         allowNull: true,
+      },
+      token: {
+        type: Sequelize.STRING(500),
+        allowNull: false,
+      },
+      user_type: {
+        type: Sequelize.STRING(10), //normal, admin, domain
+        allowNull: false,
       },
     }, {
       sequelize,
