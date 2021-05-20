@@ -6,7 +6,8 @@ const Banner = require('./banner');
 const Product = require('./product');
 const DeliverAddress = require('./deliver_address');
 const Order = require('./order');
-const OrderDetail = require('./order_detail');
+const Cart = require('./cart');
+const Category = require('./category');
 
 const db = {};
 const sequelize = new Sequelize(
@@ -19,20 +20,23 @@ db.Banner = Banner;
 db.Product = Product;
 db.DeliverAddress = DeliverAddress;
 db.Order = Order;
-db.OrderDetail = OrderDetail;
+db.Cart = Cart;
+db.Category = Category;
 
 User.init(sequelize);
 Banner.init(sequelize);
 Product.init(sequelize);
 DeliverAddress.init(sequelize);
 Order.init(sequelize);
-OrderDetail.init(sequelize);
+Cart.init(sequelize);
+Category.init(sequelize);
 
 User.associate(db);
 Banner.associate(db);
 Product.associate(db);
 DeliverAddress.associate(db);
 Order.associate(db);
-OrderDetail.associate(db);
+Cart.associate(db);
+Category.associate(db);
 
 module.exports = db;

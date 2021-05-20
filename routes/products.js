@@ -1,52 +1,26 @@
-let express = require('express');
-let app = express();
-let router = express.Router();
-let mysql = require('mysql2');
-const { IsAdmin } = require('./middlewares');
-var moment = require('moment');
-require('moment-timezone');
+const express = require('express');
+const Product = require('../models/product');
+const router = express.Router();
 
-// let product = require('../models/product')
 
-var pool = mysql.createPool({
-    host:'localhost',
-    user:'root',
-    password:'sprout3082!',
-    database:'test'
-});
-pool.getConnection(function (err, connection){
-    if(err){
-        if(connection){
-            connection.release();
+router.post('/', async (req, res, next) => {
+        try {
+            await Product.create({
+                p_name: req.body.p_name,
+                description: req.body.description,
+                cat_id: req.body.cat_id,
+                price: req.body.price,
+                stock: req.body.stock,
+                file: req.body.file,
+            });
+            return res.status(200).send({message: `상품을 생성하였습니다:)`});
+        } catch (err) {
+            return res.status(500).json(err);
         }
-        callback(err.null);
-        return;
-    }
 })
-/**
- * @api {get} /product 상품 목록 요청
- * @apiName GetProductList
- * @apiGroup Product
- *
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     [
- *      {
- *       "id": 0,
- *       "name": "Noah",
- *       "price": 35000
- *      },
- *      {
- *         "id": 1,
- *       "name": "Seorin",
- *       "price": 30000
- *       }
- *     ]
- *
- */
+
 // 등록된 product 보기
-router.get('/', function (req, res, next){
+router.get('/', async (req, res, next) => {
     pool.query('SELECT * FROM product WHERE exist=1', function (err, products){
         if(err) throw err;
         return res.status(200).send(products);
@@ -55,7 +29,7 @@ router.get('/', function (req, res, next){
 })
 
 //가격 차순 : ?order=ASC/오름 DESC/내림
-router.get('/sort', (req, res, next) => {
+router.get('/sort', async (req, res, next) => {
     let order = req.query.order;
     //가격
     switch (order) {
@@ -102,7 +76,7 @@ router.get('/sort', (req, res, next) => {
 })
 
 //product 상세 페에지
-router.get('/:p_id', (req, res, next) => {
+router.get('/:p_id', async (req, res, next) => {
     console.log(req.params.p_id)
     pool.query('SELECT * FROM product WHERE p_id=?', req.params.p_id, (err2, product) => {
         console.log(product);
@@ -113,7 +87,7 @@ router.get('/:p_id', (req, res, next) => {
 })
 
 //product 카테고리 별로 정
-router.get('/category/:categoryID', (req, res, next) => {
+router.get('/category/:categoryID', async (req, res, next) => {
     let categoryID = req.params.categoryID;
     pool.query('SELECT * FROM category WHERE cat_id=? ', categoryID, (err, category) => {
         // console.log(category[0].cat_pid);
@@ -136,18 +110,8 @@ router.get('/category/:categoryID', (req, res, next) => {
     })
 })
 
-//post
-router.post('/', function (req, res, next) {
-    let {p_name, description, cat_id, price, stock} = req.body;
-    pool.query('INSERT INTO product (p_name, description, cat_id, price, stock, regist_time) VALUES(?, ?, ?, ?, ?,?)',
-        [p_name, description, cat_id, price, stock, moment().format('YYYY-MM-DD HH:mm:ss')], function (err, product) {
-            if (err) throw err;
-            return res.status(200).send(product);
-            res.end();
-        });
-})
 //patch
-router.patch('/:p_id', IsAdmin, function (req, res, next) {
+router.patch('/:p_id', /*IsAdmin,*/ async (req, res, next) => {
     let {p_name, description, cat_id, price, stock} = req.body;
     pool.query('UPDATE product SET p_name=?, description=?, cat_id=?, price=?, stock=? WHERE p_id=?',
         [p_name, description, cat_id, price, stock, req.params.p_id],
@@ -158,16 +122,36 @@ router.patch('/:p_id', IsAdmin, function (req, res, next) {
             return res.status(200).send(product);
             res.end();
         })
-})
-//delete
-router.delete('/:p_id', IsAdmin, function (req, res, next) {
-    pool.query('UPDATE product SET exist=0 WHERE p_id = ?', req.params.p_id, function (error, result) {
-        if (error) {
-            throw error;
+        try {
+            await Product.update({
+                p_name: req.body.p_name,
+                description: req.body.description,
+                cat_id: req.body.cat_id,
+                price: req.body.price,
+                stock: req.body.stock,
+                file: req.body.file,
+            },
+            {
+                where: {p_id: req.params.p_id},
+            });
+            product = await Product.findOne({where: {id: req.params.p_id}})
+            return res.json(product);
+        } catch (err) {
+            return res.status(500).json(err);
         }
-        return res.status(200).send(result);
-        res.end();
-    });
+})
+
+//delete
+router.delete('/:p_id', /*IsAdmin,*/ async (req, res, next) => {
+    try {
+        await Product.destroy({
+            where: {p_id: req.params.p_id},
+        });
+        return res.status(200).send(`${req.params.cat_id} 배너가 삭제되었습니다.`);
+    } catch (err) {
+        return res.status(500).json(err);
+    }
 });
+
 
 module.exports = router;

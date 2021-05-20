@@ -9,7 +9,7 @@ const router = express.Router();
 const chk_password = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/;
 
 //유저 생성 하기
-router.post('/', IsAdmin, async (req, res, next) => {
+router.post('/', /*IsAdmin*/ async (req, res, next) => {
     try {
         console.log(req.body.id);
         const exUser = await User.findOne({ where: { id: req.body.id } });
@@ -40,7 +40,7 @@ router.post('/', IsAdmin, async (req, res, next) => {
 });
 
 //전체 유저 목록보기
-router.get('/', IsAdmin, async (req,res,next) => {
+router.get('/', /*IsAdmin*/ async (req,res,next) => {
     console.log('get /user OK')
     try {
         users = await User.findAll({});
@@ -61,7 +61,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 //유저 정보 수정하기
-router.patch('/:id', IsAdmin, async (req, res, next) => {
+router.patch('/:id', /*IsAdmin*/ async (req, res, next) => {
     console.log('patch /user OK');
     try {
         if (chk_password.test(req.body.password) === false) {
@@ -83,7 +83,7 @@ router.patch('/:id', IsAdmin, async (req, res, next) => {
 });
 
 //유저 삭제하기
-router.delete('/:id', IsAdmin,async (req,res,next) => {
+router.delete('/:id', /*IsAdmin*/ async (req,res,next) => {
     console.log('delete /user OK')
     try {
         user = await User.findOne({where: {id: req.params.id}})

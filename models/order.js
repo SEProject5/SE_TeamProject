@@ -1,44 +1,33 @@
 const Sequelize = require('sequelize');
 
+//결제랑 관련
 module.exports = class Order extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      user_id: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-      },
-      order_date: { //주문날짜
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      zip_code: {
-        type: Sequelize.STRING(7),
-        allowNull: false,
-      },
-      address: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-      },
-      address_detail: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-      },
-      receiver_name: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-      },
-      receiver_phone: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-      },
-      order_state: { //결제완료, 배송중, 배송완료, 구매확정
-        type: Sequelize.STRING(10),
-      }
+        id: { //주문상세번호
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        },
+        order_number: { //주문번호
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        product_number: { //상품번호
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        product_count: { //상품수량
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        product_price: { //상품가격
+            type: Sequelize.INTEGER,
+            allowNull: false,
+        },
+        order_state: { //결제완료, 배송중, 배송완료, 구매확정
+          type: Sequelize.STRING(10),
+        }
     }, {
       sequelize,
       timestamps: true, //createdAt, updatedAt 생성
