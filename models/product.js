@@ -33,9 +33,6 @@ module.exports = class Product extends Sequelize.Model {
       exist: {
         type: Sequelize.INTEGER,
       },
-      regist_time: {
-        type: Sequelize.DATE,
-      }
     }, {
       sequelize,
       timestamps: true, //createdAt, updatedAt 생성

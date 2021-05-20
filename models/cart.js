@@ -14,12 +14,18 @@ module.exports = class Cart extends Sequelize.Model {
         productSeq: {
             type: Sequelize.INTEGER,
         },
-        image: {
-            type: Sequelize.STRING(45),
+        price: {
+            type: Sequelize.INTEGER,
         },
         p_name: {
             type: Sequelize.STRING(45),
         },
+        image: {
+            type: Sequelize.STRING(45),
+        },
+        productNum: {
+            type: Sequelize.INTEGER,
+        }
     }, {
       sequelize,
       timestamps: false, //createdAt, updatedAt 생성
@@ -28,7 +34,7 @@ module.exports = class Cart extends Sequelize.Model {
       tableName: 'cart',
       paranoid: true, //deletedAt 생성
       charset: 'utf8',
-      collate: 'utf8_general_ci',
+      collate: 'utf8_bin',
     });
   }
 
