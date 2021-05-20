@@ -8,7 +8,7 @@ const app = express();
 router.post('/', async (req, res, next) => {
     try {
         console.log("1");
-        await Cart.create({
+        let cart = await Cart.create({
             productSeq: req.body.productSeq,
             userSeq: req.body.userSeq,
             price: req.body.price,
@@ -18,7 +18,7 @@ router.post('/', async (req, res, next) => {
             productNum: req.body.productNum,
         });
         console.log()
-        return res.status(200).send({message: `장바구니를 생성하였습니다:)`});
+        return res.status(200).send(cart);
     } catch (err) {
         return res.status(500).json(err);
     }

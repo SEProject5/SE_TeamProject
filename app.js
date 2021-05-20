@@ -7,7 +7,7 @@ const path = require('path');
 
 dotenv.config();
 const { sequelize } = require('./models');
-const router = express.Router();;
+const router = express.Router();
 
 const app = express();
 app.set('port', process.env.PORT || 3000);
@@ -49,14 +49,25 @@ app.get('/uploads/img/:filename', (req, res) => {
   return res.sendFile(fullfilepath);
 });
 
-//app.use('/', router);
-app.use('/auth', require('./routes/auth'));
-app.use('/user', require('./routes/user'));
-app.use('/banner', require('./routes/banner'));
-app.use('/deliver_address', require('./routes/deliver_address'));
-app.use('/products', require('./routes/products'));
-app.use('/category', require('./routes/category'));
-app.use('/cart', require('./routes/cart'));
+
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/user');
+const productRouter = require('./routes/product');
+const categoryRouter = require('./routes/category');
+const cartRouter = require('./routes/cart');
+const authRouter = require('./routes/auth');
+const bannerRouter = require('./routes/banner');
+const deliverAddressRouter = require('./routes/deliver_address');
+
+
+app.use('/', indexRouter);
+app.use('/user', usersRouter);
+app.use('/product', productRouter);
+app.use('/category', categoryRouter);
+app.use('/cart', cartRouter);
+app.use('/auth',authRouter);
+app.use('/banner',bannerRouter)
+app.use('/deliver_address',deliverAddressRouter)
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
@@ -74,3 +85,6 @@ app.use((err, req, res, next) => {
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 대기중');
 });
+
+
+module.exports = app;

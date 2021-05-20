@@ -14,3 +14,27 @@ exports.IsAdmin = async(req, res, next) => {
   if(userInfo.user_type === "admin") { next();
   } else res.status(401).send({ message: "접근 권한이 없습니다."});
 };
+
+/*
+exports.ASCSortOrder = function (prop){
+  return function(a, b) {
+    if (a[prop] > b[prop]) {
+      return 1;
+    } else if (a[prop] < b[prop]) {
+      return -1;
+    }
+    return 0;
+  }
+}
+
+exports.DESCSortOrder = function (prop){
+  return function(a, b) {
+    if (a[prop] > b[prop]) {
+      return -1;
+    } else if (a[prop] < b[prop]) {
+      return 1;
+    }
+    return 0;
+  }
+}
+*/

@@ -1,59 +1,56 @@
 let express = require('express');
 let app = express();
 let router = express.Router();
-const { IsAdmin } = require('./middlewares');
+const { IsAdmin} = require('./middlewares');
 var moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
 const Product = require('../models/product')
 const Category = require('../models/category');
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 
-// router.get('/sort', async (req, res, next) => {
-//     // let product = req.body;
-//     console.log("product/sort exceed");
-//     // console.log(product);
-//     console.log("1");
-//     // let order = req.query.order;
-//     // if(!product){
-//         let product = [
-//                 {price : 'b'},
-//                 {price : 'a'},
-//                 {price : 'c'},
-//         ]
-//     // }
-//     console.log("2");
-//     console.log(product[0].price);
-//     console.log(product[1]);
-//     console.log(product[2]);
-//     console.log("3");
-//     product.sort(price);
-//     let productSorted = product.sort(<price>);
-//     console.log(product);
-//     console.log(productSorted);
-//
-//     // switch (order){
-//     //     case "priceASC":
-//     //         break;
-//     //     case "priceDESC":
-//     //         break;
-//     //     case "nameASC":
-//     //         break;
-//     //     case "nameDESC":
-//     //         break;
-//     //     case "timeASC":
-//     //         break;
-//     //     case "timeDESC":
-//     //         break;
-//     //     default :
-//     //         break;
-//     // }
-// })
+// let product = req.body;
+router.get('/sort', async (req, res, next) => {
+    let orderPrice = req.query.orderPrice;
+    let orderName = req.query.orderName;
+    let orderTime = req.query.orderTime;
+    let lowPrice = req.body.lowPrice;
+    let highPrice = req.body.highPrice;
+    orderPrice = "ASC";
+    orderTime = "ASC";
+    // orderName = "ASC";
+    lowPrice = 20000;
+    highPrice = 50000;
+    try{
+        if(orderName){
+            product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                order: [
+                    ["p_name", orderName],
+                ],
+            })
+        }else if(orderPrice){
+            product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                order: [
+                    ["price", orderPrice],
+                ],
+            })
+        }else if(orderTime){
+            product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                order: [
+                    ["createdAt", orderTime]
+                ],
+            })
+        }
+        return res.status(200).json(product);
+    }catch (err){
+        return res.status(500).json(err);
+    }
+})
 // 등록된 product 보기
 router.get('/', async (req, res, next) => {
-    console.log("get /products");
     try{
-        console.log(Product.findAll({}));
         let products = await Product.findAll({});
         return res.status(200).json(products);
     }catch (err){
@@ -109,12 +106,11 @@ router.post('/', async (req, res, next) => {
             stock: req.body.stock,
             file: req.body.file,
             exist : 1,
-            regist_time : moment().format('YYYY-MM-DD HH:mm:ss'),
             createdAt : moment().format('YYYY-MM-DD HH:mm:ss')
         });
         return res.status(200).send(product);
     } catch (err) {
-        return res.status(400).json(err);
+        return res.status(500).json(err);
     }
 })
 
