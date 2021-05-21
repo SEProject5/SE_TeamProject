@@ -15,7 +15,6 @@ exports.IsAdmin = async(req, res, next) => {
   } else res.status(401).send({ message: "접근 권한이 없습니다."});
 };
 
-/*
 exports.ASCSortOrder = function (prop){
   return function(a, b) {
     if (a[prop] > b[prop]) {
@@ -37,4 +36,3 @@ exports.DESCSortOrder = function (prop){
     return 0;
   }
 }
-*/

@@ -26,7 +26,6 @@ router.get('/:cat_id', async (req, res, next)=>{
 })
 
 router.post('/',/*IsAdmin ,*/ async (req, res, next)=>{
-    console.log("cart/post exceed");
     let cat_pid = req.body.cat_pid;
     let cat_name = req.body.cat_name;
     try{
@@ -56,10 +55,11 @@ router.patch('/:cat_id', IsAdmin, async (req, res, next) => {
         return res.status(500).json(err);
     }
 })
-router.delete('/:cat_id',IsAdmin , async (req, res, next)=>{
+router.delete('/:cat_id',/*IsAdmin ,*/ async (req, res, next)=>{
     let categoryID = req.params.cat_id;
     try{
         let category = await Category.destroy({where : {cat_id : categoryID}});
+        console.log(category);
         return res.status(200).json(category);
     }catch (err){
         return res.status(500).json(err);

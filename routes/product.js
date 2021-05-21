@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let router = express.Router();
-const { IsAdmin} = require('./middlewares');
+const { IsAdmin, ASCSortOrder, DESCSortOrder} = require('./middlewares');
 var moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
@@ -10,38 +10,60 @@ const Category = require('../models/category');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
+router.get('/search', async (req, res, next) => {
+    let keyword = req.query.keyword;
+    try{
+        let products = await Product.findAll({where : {p_name : {[Op.like] : "%" + keyword + "%"}}})
+        return res.status(200).json(products);
+    }catch (err){
+        return res.status(500).json(err);
+    }
+})
 
 // let product = req.body;
 router.get('/sort', async (req, res, next) => {
-    let orderPrice = req.query.orderPrice;
+    let orderPrice = req.query.orderPrice;   //order~~ : "ASC", "DESC"   or 0;
     let orderName = req.query.orderName;
     let orderTime = req.query.orderTime;
-    let lowPrice = req.body.lowPrice;
+    let lowPrice = req.body.lowPrice;       //defult 0~~ 큰값
     let highPrice = req.body.highPrice;
-    orderPrice = "ASC";
-    orderTime = "ASC";
-    // orderName = "ASC";
-    lowPrice = 20000;
-    highPrice = 50000;
+    let product;
     try{
-        if(orderName){
-            product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
-                order: [
-                    ["p_name", orderName],
-                ],
-            })
-        }else if(orderPrice){
-            product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
-                order: [
-                    ["price", orderPrice],
-                ],
-            })
-        }else if(orderTime){
-            product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
-                order: [
-                    ["createdAt", orderTime]
-                ],
-            })
+        let keyword = req.query.keyword;
+        if(keyword){
+            product = await Product.findAll({where : {[Op.and] :
+                        [{p_name : {[Op.like] : "%" + keyword + "%"}} ,
+                            {[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]}]}})
+            if(orderName){
+                if(orderName == "ASC")product.sort(ASCSortOrder("p_name"));
+                else product.sort(DESCSortOrder("p_name"));
+                // product = await product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                //     order: [["p_name", orderName]]})
+            }else if(orderPrice){
+                if(orderPrice == "ASC")product.sort(ASCSortOrder("price"));
+                else product.sort(DESCSortOrder("price"));
+                // product = await product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                //     order: [["price", orderPrice]]})
+                // console.log(product);
+            }else if(orderTime){
+                if(orderTime == "ASC")product.sort(ASCSortOrder("createdAt"));
+                else product.sort(DESCSortOrder("createdAt"));
+                // product = await product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                //     order: [["createdAt", orderTime]]})
+            }
+        }else{
+            if(orderName){
+                product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                    order: [["p_name", orderName]]})
+            }else if(orderPrice){
+                product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                    order: [["price", orderPrice]]})
+            }else if(orderTime){
+                product = await Product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
+                    order: [["createdAt", orderTime]]})
+            }else {
+                product = await Product.findAll({where: {[Op.and]: [{price: {[Op.gte]: lowPrice}}, {price: {[Op.lte]: highPrice}}]}})
+            }
         }
         return res.status(200).json(product);
     }catch (err){
@@ -54,7 +76,7 @@ router.get('/', async (req, res, next) => {
         let products = await Product.findAll({});
         return res.status(200).json(products);
     }catch (err){
-        return res.status(400).json(err);
+        return res.status(500).json(err);
     }
 })
 
@@ -67,7 +89,7 @@ router.get('/:p_id', async (req, res, next) => {
         let product = await Product.findOne({where: {p_id: productID}});
         return res.status(200).json(product);
     }catch (err){
-        return res.status(400).json(err);
+        return res.status(500).json(err);
     }
 })
 
@@ -76,22 +98,26 @@ router.get('/category/:categoryID', async (req, res, next) => {
     let categoryID = req.params.categoryID;
     try {
         let category = await Category.findOne({where : {cat_id : categoryID}});
-        console.log(category);
-        console.log(category[0]);
-        if (category[0].cat_pid === 0) {
-            // pool.query('SELECT * FROM category AS cat INNER JOIN product AS pro ON cat.cat_id=pro.cat_id WHERE cat_pid=? && pro.exist=1', categoryID,
-            let categories = await Category.findAll({where : {cat_pid : categoryID}});
+        if (category.cat_pid === 0) {
+            console.log("1");
+            let categories = await Category.findAll({where : {cat_pid : category.cat_id}})
             console.log(categories);
-            // for(let cat : categories){
-            //     console.log(cat);
-            // }
-            //수정하기
+            let products = {};
+            let product= {};
+            let i=0
+            for (let a of categories){
+                products[a.cat_id] = await Product.findAll({where : {cat_id : a.cat_id}});
+                for (let key in products){
+                    product[key] = products[key];
+                }
+            }
+            return res.status(200).json(product);
         }else {
             let products = await Product.findAll({where: {cat_id: categoryID}});
             return res.status(200).json(products);
         }
     }catch (err){
-        return res.status(400).json(err);
+        return res.status(500).json(err);
     }
 });
 
@@ -115,7 +141,7 @@ router.post('/', async (req, res, next) => {
 })
 
 //patch
-router.patch('/:p_id', IsAdmin, async (req, res, next)=> {
+router.patch('/:p_id', /*IsAdmin,*/ async (req, res, next)=> {
     let {p_name, description, cat_id, price, stock} = req.body;
     try{
         let product = await Product.update({
@@ -138,8 +164,7 @@ router.patch('/:p_id', IsAdmin, async (req, res, next)=> {
 })
 
 //delete
-router.delete('/:p_id', IsAdmin, async (req, res, next) => {
-    let productID = req.params.p_id;
+router.delete('/:p_id'/*, IsAdmin*/, async (req, res, next) => {
     try{
         let product = await Product.update({
             p_name: req.body.p_name,
@@ -150,7 +175,10 @@ router.delete('/:p_id', IsAdmin, async (req, res, next) => {
             file: req.body.file,
             exist : 0,
             deletedAt: moment().format('YYYY-MM-DD HH:mm:ss')
+        },{
+            where : {p_id : req.params.p_id}
         })
+        console.log(product);
         return res.status(200).json(product);
     }catch (err){
         return res.status(400).json(err);
