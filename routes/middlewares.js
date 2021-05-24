@@ -6,7 +6,7 @@ exports.IsAdmin = async(req, res, next) => {
   const user_token = await req.headers["x-access-token"];
   console.log('user_token:', user_token);
   const userInfo = await User.findOne({
-    attributes: ['user_type'],
+    attributes: ['user_token'],
     where: {token: user_token},
   })
   console.log('userInfo: ', userInfo.user_type);
@@ -14,6 +14,17 @@ exports.IsAdmin = async(req, res, next) => {
   if(userInfo.user_type === "admin") { next();
   } else res.status(401).send({ message: "접근 권한이 없습니다."});
 };
+
+/*exports.getUserId =  async(req, res, next) => {
+  const user_token = await req.headers["x-access-token"];
+  console.log('user_token:', user_token);
+  const userInfo = await User.findOne({
+    attributes: ['id'],
+    where: {token: user_token},
+  })
+  console.log('userInfo: ', userInfo.id);
+  next();
+};*/
 
 exports.ASCSortOrder = function (prop){
   return function(a, b) {

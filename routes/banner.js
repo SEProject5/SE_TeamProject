@@ -9,7 +9,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 //공지,이벤트 등록 
-router.post('/', /*IsAdmin,*/ async (req,res,next) => {
+router.post('/', IsAdmin, async (req,res,next) => {
     console.log('post /banner OK');
     try {
         console.log(req.body);

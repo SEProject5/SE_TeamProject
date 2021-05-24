@@ -25,6 +25,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
+app.get('/s3', function(req, res){
+  console.log(1);
+  res.send('Hello s3');
+});
+
 //이미지 관련
 const upload = multer({
   storage: multer.diskStorage({
@@ -51,6 +56,7 @@ app.get('/uploads/img/:filename', (req, res) => {
 
 
 const indexRouter = require('./routes/index');
+const s3Router = require('./routes/s3');
 const usersRouter = require('./routes/user');
 const productRouter = require('./routes/product');
 const categoryRouter = require('./routes/category');
@@ -61,6 +67,7 @@ const deliverAddressRouter = require('./routes/deliver_address');
 
 
 app.use('/', indexRouter);
+app.use('/s3', s3Router);
 app.use('/user', usersRouter);
 app.use('/product', productRouter);
 app.use('/category', categoryRouter);

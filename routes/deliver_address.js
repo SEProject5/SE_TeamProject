@@ -40,7 +40,7 @@ router.get('/:user_id', async (req,res,next) => {
 router.patch('/:id', async (req,res,next) => {
     console.log('patch /deliver_address OK');
     try {
-        const deliver_address = await DeliverAddress.update({
+        let deliver_address = await DeliverAddress.update({
             user_id: req.body.user_id,
             address_name: req.body.address_name,
             receiver_phone: req.body.receiver_phone,

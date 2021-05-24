@@ -2,14 +2,14 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const Jwt = require('../models/jwt');
-const { IsAdmin } = require('./middlewares');
+const { IsAdmin, getUserId } = require('./middlewares');
 const router = express.Router();
 
 // 비밀번호 정규식 설정 (영문(소문자), 숫자, 특수문자 조합, 8~16자리)
 const chk_password = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/;
 
 //유저 생성 하기
-router.post('/', /*IsAdmin*/ async (req, res, next) => {
+router.post('/', /*IsAdmin,*/ async (req, res, next) => {
     try {
         console.log(req.body.id);
         const exUser = await User.findOne({ where: { id: req.body.id } });
@@ -40,7 +40,7 @@ router.post('/', /*IsAdmin*/ async (req, res, next) => {
 });
 
 //전체 유저 목록보기
-router.get('/', /*IsAdmin*/ async (req,res,next) => {
+router.get('/', IsAdmin, async (req,res,next) => {
     console.log('get /user OK')
     try {
         users = await User.findAll({});
@@ -51,7 +51,9 @@ router.get('/', /*IsAdmin*/ async (req,res,next) => {
 });
 //특정 유저 목록보기
 router.get('/:id', async (req, res, next) => {
-    console.log('get /user/:id OK')
+    console.log('get /user/:id OK');
+    console.log(myId);
+    if(myId.userId === "admin" || myId.userId ===  req.params.id)
     try {
         const user = await User.findOne({where: {id: req.params.id},});
         return res.json(user);
@@ -61,7 +63,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 //유저 정보 수정하기
-router.patch('/:id', /*IsAdmin*/ async (req, res, next) => {
+router.patch('/:id', async (req, res, next) => {
     console.log('patch /user OK');
     try {
         if (chk_password.test(req.body.password) === false) {
@@ -83,7 +85,7 @@ router.patch('/:id', /*IsAdmin*/ async (req, res, next) => {
 });
 
 //유저 삭제하기
-router.delete('/:id', /*IsAdmin*/ async (req,res,next) => {
+router.delete('/:id', async (req,res,next) => {
     console.log('delete /user OK')
     try {
         user = await User.findOne({where: {id: req.params.id}})
