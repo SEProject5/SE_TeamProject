@@ -20,15 +20,13 @@ let upload = multer({
   })
 })
 
-router.post('/upload', upload.single("imgFile"), function(req, res, next){
-  let imgFile = req.file;
-  res.json(imgFile);
+router.post('/upload', upload.single("flie"), function(req, res, next){
+  let file = req.file;
+  res.json(file);
 })
 
 router.get('/upload', function(req, res, next) {
   res.render('upload');
 });
-
-module.exports = router;
 
 module.exports = router;
