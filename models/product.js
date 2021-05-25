@@ -12,7 +12,7 @@ module.exports = class Product extends Sequelize.Model {
         type: Sequelize.STRING(25),
         allowNull: false,
       },
-      descriprion: {
+      description: {
         type: Sequelize.STRING(100),
       },
       categoryName: {

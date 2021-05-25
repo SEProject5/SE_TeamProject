@@ -14,8 +14,14 @@ const multer = require('multer');
 
 router.get('/search', async (req, res, next) => {
     let keyword = req.query.keyword;
+    let category = req.query.category;
     try{
-        let products = await Product.findAll({where : {p_name : {[Op.like] : "%" + keyword + "%"}}})
+        if(category){
+            var products = await Product.findAll({where : {[Op.and] :
+                        [{categoryName :category},{p_name : {[Op.like] : "%" + keyword + "%"}}]}})
+        }else{
+            var products = await Product.findAll({where : {p_name : {[Op.like] : "%" + keyword + "%"}}})
+        }
         return res.status(200).json(products);
     }catch (err){
         return res.status(500).json(err);
@@ -108,6 +114,7 @@ router.get('/category/:categoryName', async (req, res, next) => {
 
 //post
 router.post('/',/* upload.single('img'),*/ async (req, res, next) => {
+    console.log("post exceed");
     // let image = req.file;
     //
     // console.log(image);
@@ -117,16 +124,18 @@ router.post('/',/* upload.single('img'),*/ async (req, res, next) => {
 
 
     try {
+        console.log("1");
         let product = await Product.create({
             p_name: req.body.p_name,
             description: req.body.description,
-            cat_id: req.body.cat_id,
+            categoryName: req.body.categoryName,
             price: req.body.price,
             stock: req.body.stock,
             file: null,
             exist : 1,
             createdAt : moment().format('YYYY-MM-DD HH:mm:ss')
         });
+        console.log("2");
         return res.status(200).send(product);
     } catch (err) {
         return res.status(500).json(err);
