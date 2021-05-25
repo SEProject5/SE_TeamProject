@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let router = express.Router();
-const { IsAdmin, ASCSortOrder, DESCSortOrder, upload} = require('./middlewares');
+const { ASCSortOrder, DESCSortOrder, upload} = require('../middlewares');
 var moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
@@ -107,7 +107,7 @@ router.get('/category/:categoryName', async (req, res, next) => {
 });
 
 //post
-router.post('/',/*IsAdmin,*//* upload.single('img'),*/ async (req, res, next) => {
+router.post('/',/* upload.single('img'),*/ async (req, res, next) => {
     // let image = req.file;
     //
     // console.log(image);
@@ -134,7 +134,7 @@ router.post('/',/*IsAdmin,*//* upload.single('img'),*/ async (req, res, next) =>
 })
 
 //patch
-router.patch('/:p_id', IsAdmin, async (req, res, next)=> {
+router.patch('/:p_id', async (req, res, next)=> {
     let {p_name, description, cat_id, price, stock} = req.body;
     try{
         let product = await Product.update({
@@ -157,7 +157,7 @@ router.patch('/:p_id', IsAdmin, async (req, res, next)=> {
 })
 
 //delete
-router.delete('/:p_id', IsAdmin, async (req, res, next) => {
+router.delete('/:p_id', async (req, res, next) => {
     try{
         let product = await Product.update({
             p_name: req.body.p_name,

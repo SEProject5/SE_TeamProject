@@ -2,17 +2,18 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const Jwt = require('../models/jwt');
-const { IsAdmin, getUserId } = require('./middlewares');
 const router = express.Router();
 
 // 비밀번호 정규식 설정 (영문(소문자), 숫자, 특수문자 조합, 8~16자리)
 const chk_password = /^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}$/;
 
 //유저 생성 하기
-router.post('/', /*IsAdmin,*/ async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     try {
         console.log(req.body.id);
-        const exUser = await User.findOne({ where: { id: req.body.id } });
+        const exUser = await User.findOne({ 
+            where: { id: req.body.id } 
+        });
         if (exUser) { //id가 존재하면 
         return res.status(400).send({message: "이미 존재하는 id 입니다."});
         } else {
@@ -33,14 +34,18 @@ router.post('/', /*IsAdmin,*/ async (req, res, next) => {
             token: user_token.user_token,
             user_type: "normal",
         });
-        return res.status(200).send({message: `${req.body.id} 유저를 생성하였습니다:)`});
+        const user = await User.findOne({
+            attributes: ['id','name','email','user_type'],
+            where: {id: req.body.id},
+        });
+        return res.status(200).json(user);
     } catch (err) {
         return res.status(400).json(err);
     }
 });
 
 //전체 유저 목록보기
-router.get('/', IsAdmin, async (req,res,next) => {
+router.get('/', async (req,res,next) => {
     console.log('get /user OK')
     try {
         users = await User.findAll({});
@@ -52,8 +57,6 @@ router.get('/', IsAdmin, async (req,res,next) => {
 //특정 유저 목록보기
 router.get('/:id', async (req, res, next) => {
     console.log('get /user/:id OK');
-    console.log(myId);
-    if(myId.userId === "admin" || myId.userId ===  req.params.id)
     try {
         const user = await User.findOne({where: {id: req.params.id},});
         return res.json(user);

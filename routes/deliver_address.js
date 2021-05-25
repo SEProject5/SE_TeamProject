@@ -1,7 +1,6 @@
 //배송지 관련 라우터
 const express = require('express');
 const DeliverAddress = require('../models/deliver_address');
-const { IsAdmin } = require('./middlewares');
 const router = express.Router();
  
 //배송지 등록
@@ -59,7 +58,7 @@ router.patch('/:id', async (req,res,next) => {
 });
 
 //배송지 삭제
-router.delete('/:id', /*IsAdmin,*/ async (req,res,next) => {
+router.delete('/:id', async (req,res,next) => {
     console.log('delete /deliver_address OK')
     try {
         await DeliverAddress.destroy({

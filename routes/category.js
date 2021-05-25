@@ -2,8 +2,6 @@ const express = require('express');
 const app = express();
 const bcrypt = require('bcrypt');
 const router = express.Router();
-let mysql = require('mysql2');
-const { IsAdmin } = require('./middlewares');
 const Category = require('../models/category');
 
 router.get('/', async (req, res, next) =>{
@@ -25,7 +23,7 @@ router.get('/:cat_name', async (req, res, next)=>{
     }
 })
 
-router.post('/',/*IsAdmin ,*/ async (req, res, next)=>{
+router.post('/', async (req, res, next)=>{
     let cat_name = req.body.cat_name;
     try{
         let category = await Category.create({
@@ -37,7 +35,7 @@ router.post('/',/*IsAdmin ,*/ async (req, res, next)=>{
     }
 })
 
-router.patch('/:cat_name', /*IsAdmin,*/ async (req, res, next) => {
+router.patch('/:cat_name', async (req, res, next) => {
     let categoryName = req.body.cat_name;
     try{
         let category = await Category.update({
@@ -50,7 +48,7 @@ router.patch('/:cat_name', /*IsAdmin,*/ async (req, res, next) => {
         return res.status(500).json(err);
     }
 })
-router.delete('/:cat_name',/*IsAdmin ,*/ async (req, res, next)=>{
+router.delete('/:cat_name', async (req, res, next)=>{
     let categoryName = req.params.cat_name;
     try{
         let category = await Category.destroy({where : {cat_name : categoryName}});

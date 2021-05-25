@@ -1,6 +1,5 @@
 const express = require('express');
 const Banner = require('../models/banner');
-const { IsAdmin } = require('./middlewares');
 const router = express.Router();
 let moment = require('moment');
 require('moment-timezone');
@@ -9,7 +8,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 //공지,이벤트 등록 
-router.post('/', IsAdmin, async (req,res,next) => {
+router.post('/', async (req,res,next) => {
     console.log('post /banner OK');
     try {
         console.log(req.body);
@@ -28,7 +27,7 @@ router.post('/', IsAdmin, async (req,res,next) => {
 });
 
 //배너 검색/정렬
-router.get('/', /*IsAdmin,*/ async (req,res,next) => {
+router.get('/', async (req,res,next) => {
     console.log('get /banner OK');
     let now = moment().format('YYYY-MM-DD');
     console.log(now);
@@ -69,7 +68,7 @@ router.get('/', /*IsAdmin,*/ async (req,res,next) => {
 });
 
 //공지,이벤트 수정
-router.patch('/:id', /*IsAdmin,*/ async (req,res,next) => {
+router.patch('/:id', async (req,res,next) => {
     console.log('patch /banner OK')
     try {
         await Banner.update({
@@ -91,7 +90,7 @@ router.patch('/:id', /*IsAdmin,*/ async (req,res,next) => {
 });
 
 //공지 삭제
-router.delete('/:id', /*IsAdmin,*/ async (req,res,next) => {
+router.delete('/:id', async (req,res,next) => {
     console.log('delete /banner OK')
     try {
         await Banner.destroy({
