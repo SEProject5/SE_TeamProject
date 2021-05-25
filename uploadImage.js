@@ -14,11 +14,9 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-
 // Router
 router.post("/banner", upload.single('img'), async(req, res, next) => {
   console.log('img middle OK');
-  console.log(req.file.path);
   req.body.image = req.file.path
   next();
 });

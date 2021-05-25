@@ -33,7 +33,11 @@ router.post('/join', async (req, res, next) => {
       token: user_token.user_token,
       user_type: "normal",
     });
-    return res.status(200).send({message: "회원가입이 완료되었습니다:)"});
+    const user = await User.findOne({
+      attributes: ['id','name','email','token','user_type'],
+      where: {id: req.body.id},
+    });
+  return res.status(200).json(user);
   } catch (error) {
       return res.status(400).json(error);
   }
@@ -76,7 +80,11 @@ router.post('/login', async (req, res) => {
       const isSame = bcrypt.compareSync(req.body.password, exUser.password);
       console.log(isSame);
       if(isSame){
-          res.json(exUser); //로그인 성공! 유저 정보 전송!
+        const user = await User.findOne({
+          attributes: ['id','name','email','token','user_type'],
+          where: {id: req.body.id},
+        });
+        return res.status(200).json(user);
       }else{
           res.status(403).send({message : "비밀번호가 일치하지 않습니다."});
       }

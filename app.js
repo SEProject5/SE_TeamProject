@@ -23,12 +23,11 @@ sequelize.sync({ force: false }) //force가 True이면 서버 실행 시마다 �
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/uploads",express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads',express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(tokenMiddleWare);
-app.use('/uploads',express.static('uploads'));
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/user');
@@ -40,8 +39,8 @@ const bannerRouter = require('./routes/banner');
 const deliverAddressRouter = require('./routes/deliver_address');
 const uploadImg = require('./uploadImage');
 
-app.use('/', uploadImg);
 app.use('/', indexRouter);
+app.use('/', uploadImg);
 app.use('/user', usersRouter);
 app.use('/product', productRouter);
 app.use('/category', categoryRouter);

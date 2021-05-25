@@ -48,8 +48,10 @@ router.post('/', async (req, res, next) => {
 router.get('/', async (req,res,next) => {
     console.log('get /user OK')
     try {
-        users = await User.findAll({});
-        return res.json(users);
+        users = await User.findAll({
+            attributes: ['id','name','email','user_type'],
+        });
+        return res.status(200).json(users);
     } catch (err) {
         return res.status(400).json(err);
     }
@@ -58,8 +60,11 @@ router.get('/', async (req,res,next) => {
 router.get('/:id', async (req, res, next) => {
     console.log('get /user/:id OK');
     try {
-        const user = await User.findOne({where: {id: req.params.id},});
-        return res.json(user);
+        const user = await User.findOne({
+            attributes: ['id','name','email','user_type'],
+            where: {id: req.params.id},
+        });
+        return res.status(200).json(user);
     } catch (err) {
         return res.status(400).json(err);
     }
@@ -80,8 +85,10 @@ router.patch('/:id', async (req, res, next) => {
         }, {
             where: {id: req.params.id},
         });
-        user = await User.findOne({where: {id: req.params.id}})
-        return res.json(user);
+        const user = await User.findOne({
+            attributes: ['id','name','email','user_type'],
+            where: {id: req.params.id}})
+        return res.status(200).json(user);
     } catch (err) {
         return res.status(400).json(err);
     }

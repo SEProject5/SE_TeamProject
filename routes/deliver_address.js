@@ -2,6 +2,8 @@
 const express = require('express');
 const DeliverAddress = require('../models/deliver_address');
 const router = express.Router();
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
  
 //배송지 등록
 router.post('/', async (req,res,next) => {
@@ -16,7 +18,11 @@ router.post('/', async (req,res,next) => {
             address_detail: req.body.address_detail,
             address_type: req.body.address_type,
         });
-        return res.status(200).send({message: `배송지를 등록하였습니다:)`});
+        const deliver_address = await DeliverAddress.findOne({
+            attributes: ['id','user_id','address_name','receiver_phone','zip_code', 'address','address_detail','address_type'],
+            where: {[Op.and]: [{title: req.body.title},{address_name: req.body.address_name}]},
+        });
+        return res.status(200).json(deliver_address);
     } catch (err) {
         return res.status(500).json(err);
     }
@@ -27,6 +33,7 @@ router.get('/:user_id', async (req,res,next) => {
     console.log('get /deliver_address OK');
     try {
         const deliver_address = await DeliverAddress.findAll({
+            attributes: ['id','user_id','address_name','receiver_phone','zip_code', 'address','address_detail','address_type'],
             where: {user_id: req.params.user_id},
         });
         return res.json(deliver_address);
@@ -39,7 +46,7 @@ router.get('/:user_id', async (req,res,next) => {
 router.patch('/:id', async (req,res,next) => {
     console.log('patch /deliver_address OK');
     try {
-        let deliver_address = await DeliverAddress.update({
+        await DeliverAddress.update({
             user_id: req.body.user_id,
             address_name: req.body.address_name,
             receiver_phone: req.body.receiver_phone,
@@ -49,6 +56,10 @@ router.patch('/:id', async (req,res,next) => {
             address_type: req.body.address_type,
         },
         {
+            where: {id: req.params.id},
+        });
+        const deliver_address = await DeliverAddress.findOne({
+            attributes: ['id','user_id','address_name','receiver_phone','zip_code', 'address','address_detail','address_type'],
             where: {id: req.params.id},
         });
         return res.json(deliver_address);

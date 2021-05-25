@@ -12,6 +12,7 @@ module.exports = async function (req, res, next) {
                 where: {token: user_token},
             });
           req.userInfo = data;
+          console.log(data);
           next();
       }catch (err){
           res.status(500).json(err);

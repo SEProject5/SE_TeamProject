@@ -11,7 +11,6 @@ const Op = Sequelize.Op;
 router.post('/', async (req,res,next) => {
     console.log('post /banner OK');
     try {
-        console.log(req.body);
         await Banner.create({
             startDate: req.body.startDate,
             endDate: req.body.endDate,
@@ -20,7 +19,11 @@ router.post('/', async (req,res,next) => {
             description: req.body.description,
             image: req.body.image,
         });
-        return res.status(200).send({message: `${req.body.title} 배너를 생성하였습니다:)`});
+        const banner = await Banner.findOne({
+            attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+            where: {title: req.body.title},
+        });
+        return res.status(200).json(banner);
     } catch (err) {
         return res.status(500).json(err);
     }
@@ -37,30 +40,36 @@ router.get('/', async (req,res,next) => {
     try {
         if(order===0) {
             console.log('전체 배너');
-            const banner = await Banner.findAll({});
+            const banner = await Banner.findAll({
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+            });
             return res.json(banner);
         } else if(order===1) {
             console.log('기간 지난 배너');
             const banner = await Banner.findAll({
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
                 where: {endDate: {[Op.lt]: now}},
             }); 
             return res.json(banner);
         } else if(order===2) {
             console.log('진행 중인 배너');
             const banner = await Banner.findAll({
-            where: {
-                [Op.and]: [{startDate: {[Op.lte]: now}}, {endDate: {[Op.gte]: now}}]
-            }
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+                where: {
+                    [Op.and]: [{startDate: {[Op.lte]: now}}, {endDate: {[Op.gte]: now}}]
+                }
             }); 
             return res.json(banner);
         } else if(order===3) {
             console.log('진행 예정인 배너');
             const banner = await Banner.findAll({
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
                 where: {startDate: {[Op.gt]: now}}
             }); 
             res.json(banner);
         } else {
             console.log('배너를 조회할 수 없습니다.');
+            return res.status(500).send('배너를 조회할 수 없습니다.');
         }
     } catch (err) {
         return res.status(500).json(err);
@@ -82,7 +91,9 @@ router.patch('/:id', async (req,res,next) => {
         {
             where: {id: req.params.id},
         });
-        banner = await Banner.findOne({where: {id: req.params.id}})
+        banner = await Banner.findOne({
+            attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+            where: {id: req.params.id}})
         return res.json(banner);
     } catch (err) {
         return res.status(500).json(err);
