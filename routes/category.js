@@ -15,10 +15,10 @@ router.get('/', async (req, res, next) =>{
     }
 })
 
-router.get('/:cat_id', async (req, res, next)=>{
-    let categoryID = req.params.cat_id;
+router.get('/:cat_name', async (req, res, next)=>{
+    let categoryName = req.params.cat_name;
     try{
-        let category = await Category.findOne({where : { cat_id : categoryID}});
+        let category = await Category.findOne({where : { cat_name : categoryName}});
         return res.status(200).json(category);
     }catch (err){
         return res.status(500).json(err);
@@ -26,11 +26,9 @@ router.get('/:cat_id', async (req, res, next)=>{
 })
 
 router.post('/',/*IsAdmin ,*/ async (req, res, next)=>{
-    let cat_pid = req.body.cat_pid;
     let cat_name = req.body.cat_name;
     try{
         let category = await Category.create({
-            cat_pid : cat_pid,
             cat_name: cat_name
         })
         return res.status(200).json(category);
@@ -39,27 +37,23 @@ router.post('/',/*IsAdmin ,*/ async (req, res, next)=>{
     }
 })
 
-router.patch('/:cat_id', IsAdmin, async (req, res, next) => {
-    let categoryID = req.params.cat_id;
-    let cat_pid = req.body.cat_id;
-    let cat_name = req.body.cat_name;
+router.patch('/:cat_name', /*IsAdmin,*/ async (req, res, next) => {
+    let categoryName = req.body.cat_name;
     try{
         let category = await Category.update({
-            cat_pid : cat_pid,
-            cat_name : cat_name
+            cat_name : categoryName
         },{
-            where : {cat_id : categoryID}
+            where : {cat_name: req.params.cat_name}
         })
         return res.status(200).json(category);
     }catch (err){
         return res.status(500).json(err);
     }
 })
-router.delete('/:cat_id',/*IsAdmin ,*/ async (req, res, next)=>{
-    let categoryID = req.params.cat_id;
+router.delete('/:cat_name',/*IsAdmin ,*/ async (req, res, next)=>{
+    let categoryName = req.params.cat_name;
     try{
-        let category = await Category.destroy({where : {cat_id : categoryID}});
-        console.log(category);
+        let category = await Category.destroy({where : {cat_name : categoryName}});
         return res.status(200).json(category);
     }catch (err){
         return res.status(500).json(err);

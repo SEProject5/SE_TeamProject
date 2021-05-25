@@ -3,10 +3,12 @@ const router = express.Router();
 const path = require("path");
 const multer = require("multer");
 const multerS3 = require('multer-s3');
+const app = require('../app');
+const awsConfigRouter = require('../config/awsconfig.json');
 const AWS = require("aws-sdk");
-AWS.config.loadFromPath(__dirname + "/../config/awsconfig.json");
-
 let s3 = new AWS.S3();
+const asd = require('../')
+AWS.config.loadFromPath("../config/awsconfig.json");
 
 let upload = multer({
   storage: multerS3({
@@ -20,8 +22,11 @@ let upload = multer({
   })
 })
 
-router.post('/upload', upload.single("imgFile"), function(req, res, next){
-  let imgFile = req.file;
+router.post('/upload', /*upload.single("imgFile"),*/ function(req, res, next){
+  console.log("1");
+  // let imgFile = req.;
+  console.log(imgFile);
+
   res.json(imgFile);
 })
 
@@ -29,6 +34,5 @@ router.get('/upload', function(req, res, next) {
   res.render('upload');
 });
 
-module.exports = router;
 
 module.exports = router;

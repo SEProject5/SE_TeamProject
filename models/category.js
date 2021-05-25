@@ -8,10 +8,6 @@ module.exports = class Category extends Sequelize.Model {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            cat_pid: {
-                type: Sequelize.INTEGER,
-                defaultValue: 0,
-            },
             cat_name: {
                 type: Sequelize.STRING(45),
                 allowNull: false,

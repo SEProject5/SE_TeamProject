@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let router = express.Router();
-const { IsAdmin, ASCSortOrder, DESCSortOrder} = require('./middlewares');
+const { IsAdmin, ASCSortOrder, DESCSortOrder, upload} = require('./middlewares');
 var moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
@@ -9,6 +9,8 @@ const Product = require('../models/product')
 const Category = require('../models/category');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const multer = require('multer');
+
 
 router.get('/search', async (req, res, next) => {
     let keyword = req.query.keyword;
@@ -94,35 +96,26 @@ router.get('/:p_id', async (req, res, next) => {
 })
 
 // product 카테고리 별로 정리
-router.get('/category/:categoryID', async (req, res, next) => {
-    let categoryID = req.params.categoryID;
+router.get('/category/:categoryName', async (req, res, next) => {
+    console.log('product/category/');
     try {
-        let category = await Category.findOne({where : {cat_id : categoryID}});
-        if (category.cat_pid === 0) {
-            console.log("1");
-            let categories = await Category.findAll({where : {cat_pid : category.cat_id}})
-            console.log(categories);
-            let products = {};
-            let product= {};
-            let i=0
-            for (let a of categories){
-                products[a.cat_id] = await Product.findAll({where : {cat_id : a.cat_id}});
-                for (let key in products){
-                    product[key] = products[key];
-                }
-            }
-            return res.status(200).json(product);
-        }else {
-            let products = await Product.findAll({where: {cat_id: categoryID}});
-            return res.status(200).json(products);
-        }
+        let products = await Product.findAll({where: {categoryName: req.params.categoryName}});
+        return res.status(200).json(products);
     }catch (err){
         return res.status(500).json(err);
     }
 });
 
 //post
-router.post('/', async (req, res, next) => {
+router.post('/',/*IsAdmin,*//* upload.single('img'),*/ async (req, res, next) => {
+    // let image = req.file;
+    //
+    // console.log(image);
+    // console.log(req.file.filename);
+    // console.log(req.file.path);
+    // console.log(req.file);
+
+
     try {
         let product = await Product.create({
             p_name: req.body.p_name,
@@ -130,7 +123,7 @@ router.post('/', async (req, res, next) => {
             cat_id: req.body.cat_id,
             price: req.body.price,
             stock: req.body.stock,
-            file: req.body.file,
+            file: null,
             exist : 1,
             createdAt : moment().format('YYYY-MM-DD HH:mm:ss')
         });
@@ -141,7 +134,7 @@ router.post('/', async (req, res, next) => {
 })
 
 //patch
-router.patch('/:p_id', /*IsAdmin,*/ async (req, res, next)=> {
+router.patch('/:p_id', IsAdmin, async (req, res, next)=> {
     let {p_name, description, cat_id, price, stock} = req.body;
     try{
         let product = await Product.update({
@@ -164,7 +157,7 @@ router.patch('/:p_id', /*IsAdmin,*/ async (req, res, next)=> {
 })
 
 //delete
-router.delete('/:p_id'/*, IsAdmin*/, async (req, res, next) => {
+router.delete('/:p_id', IsAdmin, async (req, res, next) => {
     try{
         let product = await Product.update({
             p_name: req.body.p_name,

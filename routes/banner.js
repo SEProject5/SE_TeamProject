@@ -38,21 +38,17 @@ router.get('/', /*IsAdmin,*/ async (req,res,next) => {
     try {
         if(order===0) {
             console.log('전체 배너');
-            const banner = await Banner.findAll({
-                attributes: ['id','image']
-            }); 
+            const banner = await Banner.findAll({});
             return res.json(banner);
         } else if(order===1) {
             console.log('기간 지난 배너');
             const banner = await Banner.findAll({
-                attributes: ['id','image'],
                 where: {endDate: {[Op.lt]: now}},
             }); 
             return res.json(banner);
         } else if(order===2) {
             console.log('진행 중인 배너');
             const banner = await Banner.findAll({
-            attributes: ['id','image'],
             where: {
                 [Op.and]: [{startDate: {[Op.lte]: now}}, {endDate: {[Op.gte]: now}}]
             }
@@ -61,7 +57,6 @@ router.get('/', /*IsAdmin,*/ async (req,res,next) => {
         } else if(order===3) {
             console.log('진행 예정인 배너');
             const banner = await Banner.findAll({
-                attributes: ['id','image'],
                 where: {startDate: {[Op.gt]: now}}
             }); 
             res.json(banner);

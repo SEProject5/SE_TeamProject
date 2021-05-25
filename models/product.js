@@ -15,8 +15,8 @@ module.exports = class Product extends Sequelize.Model {
       descriprion: {
         type: Sequelize.STRING(100),
       },
-      cat_id: {
-        type: Sequelize.INTEGER,
+      categoryName: {
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       price: {

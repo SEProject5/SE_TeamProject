@@ -4,14 +4,15 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const multer = require('multer');
 const path = require('path');
-
 dotenv.config();
+const cors =require('cors');
+
 const { sequelize } = require('./models');
 const router = express.Router();
 
 const app = express();
 app.set('port', process.env.PORT || 3000);
-sequelize.sync({ force: true }) //force가 True이면 서버 실행 시마다 테이블 재생성
+sequelize.sync({ force: false }) //force가 True이면 서버 실행 시마다 테이블 재생성
   .then(() => {
     console.log('데이터베이스 연결 성공');
   })
@@ -20,6 +21,7 @@ sequelize.sync({ force: true }) //force가 True이면 서버 실행 시마다 �
   });
 
 app.use(morgan('dev'));
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
