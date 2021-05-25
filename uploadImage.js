@@ -21,4 +21,16 @@ router.post("/banner", upload.single('img'), async(req, res, next) => {
   next();
 });
 
+
+router.post("/product", upload.single('img'), async(req, res, next) => {
+    console.log('img middle OK');
+    req.body.image = req.file.path
+    next();
+});
+router.post("/cart", upload.single('img'), async(req, res, next) => {
+    console.log('img middle OK');
+    req.body.image = req.file.path
+    next();
+});
+
 module.exports = router;
