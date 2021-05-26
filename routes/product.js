@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let router = express.Router();
-const { ASCSortOrder, DESCSortOrder, upload} = require('../middlewares');
+const { ASCSortOrder, DESCSortOrder, GetImgs} = require('../middlewares');
 var moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
@@ -30,7 +30,7 @@ router.get('/sort', async (req, res, next) => {
     let lowPrice = req.body.lowPrice;       //defult 0~~ 큰값
     let highPrice = req.body.highPrice;
     let product;
-    try{
+    try{ 
         let keyword = req.query.keyword;
         if(keyword){
             product = await Product.findAll({where : {[Op.and] :
@@ -107,27 +107,18 @@ router.get('/category/:categoryName', async (req, res, next) => {
 });
 
 //post
-router.post('/',/* upload.single('img'),*/ async (req, res, next) => {
-    // let image = req.file;
-    //
-    // console.log(image);
-    // console.log(req.file.filename);
-    // console.log(req.file.path);
-    // console.log(req.file);
-
-
+router.post('/', async (req, res, next) => {
     try {
         let product = await Product.create({
             p_name: req.body.p_name,
             description: req.body.description,
-            cat_id: req.body.cat_id,
+            categoryName: req.body.categoryName,
             price: req.body.price,
             stock: req.body.stock,
-            file: null,
+            file: req.body.file,
             exist : 1,
-            createdAt : moment().format('YYYY-MM-DD HH:mm:ss')
         });
-        return res.status(200).send(product);
+        return res.status(200).json(product);
     } catch (err) {
         return res.status(500).json(err);
     }

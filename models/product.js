@@ -1,3 +1,4 @@
+const { STRING } = require('sequelize');
 const Sequelize = require('sequelize');
 
 module.exports = class Product extends Sequelize.Model {
@@ -12,8 +13,9 @@ module.exports = class Product extends Sequelize.Model {
         type: Sequelize.STRING(25),
         allowNull: false,
       },
-      descriprion: {
+      description: {
         type: Sequelize.STRING(100),
+        allowNull: false,
       },
       categoryName: {
         type: Sequelize.STRING(100),
@@ -28,7 +30,7 @@ module.exports = class Product extends Sequelize.Model {
         allowNull: false,
       },
       file: {
-        type: Sequelize.STRING(100),
+        type: Sequelize.STRING(1000),
       },
       exist: {
         type: Sequelize.INTEGER,

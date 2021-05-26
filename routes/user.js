@@ -58,39 +58,47 @@ router.get('/', async (req,res,next) => {
 });
 //특정 유저 목록보기
 router.get('/:id', async (req, res, next) => {
-    console.log('get /user/:id OK');
-    try {
-        const user = await User.findOne({
-            attributes: ['id','name','email','user_type'],
-            where: {id: req.params.id},
-        });
-        return res.status(200).json(user);
-    } catch (err) {
-        return res.status(400).json(err);
+    if(req.userInfo && (req.userInfo.user_type === 'admin' || ( req.userInfo.id === req.params.id))) {
+        console.log('get /user/:id OK');
+        try {
+            const user = await User.findOne({
+                attributes: ['id','name','email','user_type'],
+                where: {id: req.params.id},
+            });
+            return res.status(200).json(user);
+        } catch (err) {
+            return res.status(400).json(err);
+        }
+    } else {
+        res.status(403).send({"message" : "접근 권한이 없습니다."});
     }
 });
 
 //유저 정보 수정하기
 router.patch('/:id', async (req, res, next) => {
-    console.log('patch /user OK');
-    try {
-        if (chk_password.test(req.body.password) === false) {
-            throw Error("비밀번호는 영문(소문자), 숫자, 특수문자 조합의 8~16자리여야 합니다."); 
-        }
-        await User.update({
-            id: req.params.id,
-            password: req.body.password,
-            name: req.body.name,
-            email: req.body.email,
-        }, {
-            where: {id: req.params.id},
-        });
-        const user = await User.findOne({
-            attributes: ['id','name','email','user_type'],
-            where: {id: req.params.id}})
-        return res.status(200).json(user);
-    } catch (err) {
-        return res.status(400).json(err);
+    if(req.userInfo && (req.userInfo.user_type === 'admin' || ( req.userInfo.id === req.params.id))) {
+        console.log('patch /user OK');
+        try {
+            if (chk_password.test(req.body.password) === false) {
+                throw Error("비밀번호는 영문(소문자), 숫자, 특수문자 조합의 8~16자리여야 합니다."); 
+            }
+            await User.update({
+                id: req.params.id,
+                password: req.body.password,
+                name: req.body.name,
+                email: req.body.email,
+            }, {
+                where: {id: req.params.id},
+            });
+            const user = await User.findOne({
+                attributes: ['id','name','email','user_type'],
+                where: {id: req.params.id}})
+            return res.status(200).json(user);
+        } catch (err) {
+            return res.status(400).json(err);
+        } 
+    } else {
+        res.status(403).send({"message" : "접근 권한이 없습니다."});
     }
 });
 
