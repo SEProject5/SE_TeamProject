@@ -1,4 +1,3 @@
-const { STRING } = require('sequelize');
 const Sequelize = require('sequelize');
 
 module.exports = class Product extends Sequelize.Model {
@@ -27,7 +26,7 @@ module.exports = class Product extends Sequelize.Model {
       },
       stock: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       file: {
         type: Sequelize.STRING(1000),

@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let router = express.Router();
-const { ASCSortOrder, DESCSortOrder, GetImgs} = require('../middlewares');
+const { ASCSortOrder, DESCSortOrder} = require('../middlewares');
 var moment = require('moment');
 require('moment-timezone');
 moment.tz.setDefault("Asia/Seoul");
@@ -109,7 +109,7 @@ router.get('/category/:categoryName', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
     console.log("post exceed");
     try {
-        let product = await Product.create({
+        var product = await Product.create({
             p_name: req.body.p_name,
             description: req.body.description,
             categoryName: req.body.categoryName,
@@ -118,6 +118,7 @@ router.post('/', async (req, res, next) => {
             file: req.body.file,
             exist : 1,
         });
+        console.log(product);
         return res.status(200).json(product);
     } catch (err) {
         return res.status(500).json(err);
