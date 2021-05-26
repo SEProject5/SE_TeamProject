@@ -11,7 +11,7 @@ const { sequelize } = require('./models');
 
 const app = express();
 
-app.set('port', process.env.PORT || 3001);
+// app.set('port', process.env.PORT || 3001);
 sequelize.sync({ force: false }) //force가 True이면 서버 실행 시마다 테이블 재생성
   .then(() => {
     console.log('데이터베이스 연결 성공');
@@ -20,6 +20,12 @@ sequelize.sync({ force: false }) //force가 True이면 서버 실행 시마다 �
     console.error(err);
   });
 
+const corsOptions = {
+  origin: 'http://localhost:3000', // 허락하고자 하는 요청 주소
+  credentials: true, // true로 하면 설정한 내용을 response 헤더에 추가 해줍니다.
+};
+
+app.use(cors(corsOptions)); // config 추가
 app.use(morgan('dev'));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
