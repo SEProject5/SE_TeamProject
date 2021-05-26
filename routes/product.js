@@ -14,8 +14,14 @@ const multer = require('multer');
 
 router.get('/search', async (req, res, next) => {
     let keyword = req.query.keyword;
+    let category = req.query.category;
     try{
-        let products = await Product.findAll({where : {p_name : {[Op.like] : "%" + keyword + "%"}}})
+        if(category){
+            var products = await Product.findAll({where : {[Op.and] :
+                        [{categoryName :category},{p_name : {[Op.like] : "%" + keyword + "%"}}]}})
+        }else{
+            var products = await Product.findAll({where : {p_name : {[Op.like] : "%" + keyword + "%"}}})
+        }
         return res.status(200).json(products);
     }catch (err){
         return res.status(500).json(err);
@@ -39,19 +45,12 @@ router.get('/sort', async (req, res, next) => {
             if(orderName){
                 if(orderName == "ASC")product.sort(ASCSortOrder("p_name"));
                 else product.sort(DESCSortOrder("p_name"));
-                // product = await product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
-                //     order: [["p_name", orderName]]})
             }else if(orderPrice){
                 if(orderPrice == "ASC")product.sort(ASCSortOrder("price"));
                 else product.sort(DESCSortOrder("price"));
-                // product = await product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
-                //     order: [["price", orderPrice]]})
-                // console.log(product);
             }else if(orderTime){
                 if(orderTime == "ASC")product.sort(ASCSortOrder("createdAt"));
                 else product.sort(DESCSortOrder("createdAt"));
-                // product = await product.findAll( {where :{[Op.and] : [{price: {[Op.gte]: lowPrice}},{price : {[Op.lte]:highPrice}}]},
-                //     order: [["createdAt", orderTime]]})
             }
         }else{
             if(orderName){
@@ -108,6 +107,7 @@ router.get('/category/:categoryName', async (req, res, next) => {
 
 //post
 router.post('/', async (req, res, next) => {
+    console.log("post exceed");
     try {
         let product = await Product.create({
             p_name: req.body.p_name,
@@ -131,7 +131,7 @@ router.patch('/:p_id', async (req, res, next)=> {
         let product = await Product.update({
                 p_name: req.body.p_name,
                 description: req.body.description,
-                cat_id: req.body.cat_id,
+                categoryName: req.body.categoryName,
                 price: req.body.price,
                 stock: req.body.stock,
                 file: req.body.file,
@@ -153,7 +153,7 @@ router.delete('/:p_id', async (req, res, next) => {
         let product = await Product.update({
             p_name: req.body.p_name,
             description: req.body.description,
-            cat_id: req.body.cat_id,
+            categoryName: req.body.categoryName,
             price: req.body.price,
             stock: req.body.stock,
             file: req.body.file,
