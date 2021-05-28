@@ -10,7 +10,7 @@ const Category = require('../models/category');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const multer = require('multer');
-const ProductKind = require('../models/product_kind');
+// const ProductKind = require('../models/product_kind');
 
 router.get('/search', async (req, res, next) => {
     let keyword = req.query.keyword;
@@ -115,21 +115,21 @@ router.get('/category/:categoryName', async (req, res, next) => {
 
 //post
 router.post('/', async (req, res, next) => {
-    console.log("post exceed");
-    console.log("1");
-    console.log(req.body.p_name)
-    console.log(req.body,productKind);
-    console.log("2");
-    let productKind = req.body.productKind;
-    for (let a in productKind){
-        var product_kind = await ProductKind.create({
-            p_id : productKind[a].p_id,
-            color : productKind[a].color,
-            size : productKind[a].size,
-            stock : productKind[a].stock,
-        })
-        console.log(product_kind);
-    }
+    // console.log("post exceed");
+    // console.log("1");
+    // console.log(req.body.p_name)
+    // console.log(req.body,productKind);
+    // console.log("2");
+    // let productKind = req.body.productKind;
+    // for (let a in productKind){
+    //     var product_kind = await ProductKind.create({
+    //         p_id : productKind[a].p_id,
+    //         color : productKind[a].color,
+    //         size : productKind[a].size,
+    //         stock : productKind[a].stock,
+    //     })
+    //     console.log(product_kind);
+    // }
     try {
         var product = await Product.create({
             p_name: req.body.p_name,
