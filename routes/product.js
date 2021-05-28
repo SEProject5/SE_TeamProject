@@ -37,6 +37,8 @@ router.get('/sort', async (req, res, next) => {
     let highPrice = req.body.highPrice;
     if(!req.body.lowPrice) lowPrice =0;
     if(!req.body.highPrice) highPrice = 9999999;
+    console.log("lowPrice : " + lowPrice);
+    console.log("highPrice : " +highPrice);
     let product;
     try{ 
         let keyword = req.query.keyword;
