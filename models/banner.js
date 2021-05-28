@@ -27,7 +27,7 @@ module.exports = class Banner extends Sequelize.Model {
         type: Sequelize.STRING(300),
         allowNull: true,
       },
-      image: {
+      file: {
         type: Sequelize.STRING(200),
       },
     }, {

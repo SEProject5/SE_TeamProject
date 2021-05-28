@@ -20,7 +20,7 @@ module.exports = class Cart extends Sequelize.Model {
             p_name: {
                 type: Sequelize.STRING(45),
             },
-            image: {
+            file: {
                 type: Sequelize.STRING(45),
             },
             productNum: {

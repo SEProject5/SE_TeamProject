@@ -17,10 +17,10 @@ router.post('/', async (req,res,next) => {
             banner_type: req.body.banner_type,
             title: req.body.title,
             description: req.body.description,
-            image: req.body.image,
+            file: req.body.file,
         });
         const banner = await Banner.findOne({
-            attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+            attributes: ['id','startDate','endDate','banner_type','title', 'description','file'],
             where: {title: req.body.title},
         });
         return res.status(200).json(banner);
@@ -41,20 +41,20 @@ router.get('/', async (req,res,next) => {
         if(order===0) {
             console.log('전체 배너');
             const banner = await Banner.findAll({
-                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','file'],
             });
             return res.json(banner);
         } else if(order===1) {
             console.log('기간 지난 배너');
             const banner = await Banner.findAll({
-                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','file'],
                 where: {endDate: {[Op.lt]: now}},
             }); 
             return res.json(banner);
         } else if(order===2) {
             console.log('진행 중인 배너');
             const banner = await Banner.findAll({
-                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','file'],
                 where: {
                     [Op.and]: [{startDate: {[Op.lte]: now}}, {endDate: {[Op.gte]: now}}]
                 }
@@ -63,7 +63,7 @@ router.get('/', async (req,res,next) => {
         } else if(order===3) {
             console.log('진행 예정인 배너');
             const banner = await Banner.findAll({
-                attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+                attributes: ['id','startDate','endDate','banner_type','title', 'description','file'],
                 where: {startDate: {[Op.gt]: now}}
             }); 
             res.json(banner);
@@ -86,13 +86,13 @@ router.patch('/:id', async (req,res,next) => {
             banner_type: req.body.banner_type,
             title: req.body.title,
             description: req.body.description,
-            image: req.body.image,
+            file: req.body.file,
         },
         {
             where: {id: req.params.id},
         });
         banner = await Banner.findOne({
-            attributes: ['id','startDate','endDate','banner_type','title', 'description','image'],
+            attributes: ['id','startDate','endDate','banner_type','title', 'description','file'],
             where: {id: req.params.id}})
         return res.json(banner);
     } catch (err) {

@@ -11,7 +11,7 @@ router.post('/', async (req, res, next) => {
             productSeq: req.body.productSeq,
             price: req.body.price,
             p_name: req.body.p_name,
-            image: req.body.image,
+            file: req.body.file,
             productNum: req.body.productNum,
         });
         return res.status(200).json(cart);
@@ -36,7 +36,7 @@ router.patch('/:cartSeq', async (req, res, next) => {
                 productSeq: req.body.productSeq,
                 price: req.body.price,
                 p_name: req.body.p_name,
-                image: req.body.image,
+                file: req.body.file,
                 productNum: req.body.productNum,
             },
             {
