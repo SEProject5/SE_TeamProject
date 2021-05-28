@@ -21,18 +21,22 @@ router.post("/banner", upload.single('img'), async(req, res, next) => {
   next();
 });
 
-/*router.post("/product", upload.array('img'), async(req, res, next) => {
+router.post("/banner", upload.single('img'), async(req, res, next) => {
   console.log('img middle OK');
-  console.log(req.files);
-  req.files.forEach( i => {
-    req.body.file += i.path + ';'
-  })
-  console.log(req.body);
+  req.body.image = req.file.path
   next();
-});*/
+});
 
 router.post("/product", upload.single('img'), async(req, res, next) => {
   console.log('img middle OK');
+  console.log(req.file)
+  req.body.file = req.file.path
+  next();
+});
+
+router.patch("/product", upload.single('img'), async(req, res, next) => {
+  console.log('img middle OK');
+  console.log(req.file)
   req.body.file = req.file.path
   next();
 });
