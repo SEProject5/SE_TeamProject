@@ -17,11 +17,12 @@ var upload = multer({ storage: storage });
 // Router
 router.post("/banner", upload.single('img'), async(req, res, next) => {
   console.log('img middle OK');
+  console.log(req.body)
   req.body.file = req.file.path
   next();
 });
 
-router.post("/banner", upload.single('img'), async(req, res, next) => {
+router.patch("/banner", upload.single('img'), async(req, res, next) => {
   console.log('img middle OK');
   req.body.file = req.file.path
   next();
