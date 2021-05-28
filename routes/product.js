@@ -10,7 +10,7 @@ const Category = require('../models/category');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const multer = require('multer');
-
+const ProductKind = require('../models/product_kind');
 
 router.get('/search', async (req, res, next) => {
     let keyword = req.query.keyword;
@@ -35,6 +35,8 @@ router.get('/sort', async (req, res, next) => {
     let orderTime = req.query.orderTime;
     let lowPrice = req.body.lowPrice;       //defult 0~~ 큰값
     let highPrice = req.body.highPrice;
+    if(!req.body.lowPrice) lowPrice =0;
+    if(!req.body.highPrice) highPrice = 9999999;
     let product;
     try{ 
         let keyword = req.query.keyword;
@@ -73,8 +75,9 @@ router.get('/sort', async (req, res, next) => {
 })
 // 등록된 product 보기
 router.get('/', async (req, res, next) => {
+    console.log("get");
     try{
-        let products = await Product.findAll({});
+        let products = await Product.findAll({where : {exist : 1}});
         return res.status(200).json(products);
     }catch (err){
         return res.status(500).json(err);
@@ -97,8 +100,13 @@ router.get('/:p_id', async (req, res, next) => {
 // product 카테고리 별로 정리
 router.get('/category/:categoryName', async (req, res, next) => {
     console.log('product/category/');
+    let products
     try {
-        let products = await Product.findAll({where: {categoryName: req.params.categoryName}});
+        if(req.params.categoryName === "all"){
+            products = await  Product.findAll({where : {exist : 1}});
+        }else {
+            products = await Product.findAll({where: {categoryName: req.params.categoryName}});
+        }
         return res.status(200).json(products);
     }catch (err){
         return res.status(500).json(err);
@@ -108,6 +116,20 @@ router.get('/category/:categoryName', async (req, res, next) => {
 //post
 router.post('/', async (req, res, next) => {
     console.log("post exceed");
+    console.log("1");
+    console.log(req.body.p_name)
+    console.log(req.body,productKind);
+    console.log("2");
+    let productKind = req.body.productKind;
+    for (let a in productKind){
+        var product_kind = await ProductKind.create({
+            p_id : productKind[a].p_id,
+            color : productKind[a].color,
+            size : productKind[a].size,
+            stock : productKind[a].stock,
+        })
+        console.log(product_kind);
+    }
     try {
         var product = await Product.create({
             p_name: req.body.p_name,
