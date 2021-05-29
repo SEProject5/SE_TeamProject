@@ -22,7 +22,7 @@ router.post("/banner", upload.single('img'), async(req, res, next) => {
   next();
 });
 
-router.patch("/banner", upload.single('img'), async(req, res, next) => {
+router.patch("/banner/:id", upload.single('img'), async(req, res, next) => {
   console.log('img middle OK');
   req.body.file = req.file.path
   next();
@@ -35,7 +35,7 @@ router.post("/product", upload.single('img'), async(req, res, next) => {
   next();
 });
 
-router.patch("/product", upload.single('img'), async(req, res, next) => {
+router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
   console.log('img middle OK');
   console.log(req.file)
   req.body.file = req.file.path

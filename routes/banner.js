@@ -10,6 +10,7 @@ const Op = Sequelize.Op;
 //공지,이벤트 등록 
 router.post('/', async (req,res,next) => {
     console.log('post /banner OK');
+    console.log(req.body);
     try {
         await Banner.create({
             startDate: req.body.startDate,

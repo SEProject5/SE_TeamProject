@@ -45,11 +45,6 @@ const bannerRouter = require('./routes/banner');
 const deliverAddressRouter = require('./routes/deliver_address');
 const uploadImg = require('./uploadImage');
 
-/*app.use('/getImages', function(req, res) {
-  let imgs = [];
-
-});*/
-
 app.use('/', indexRouter);
 app.use('/', uploadImg);
 app.use('/user', usersRouter);

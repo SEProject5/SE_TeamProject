@@ -9,11 +9,11 @@ module.exports = class Banner extends Sequelize.Model {
         autoIncrement: true,
       },
       startDate: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       endDate: {
-        type: Sequelize.DATEONLY,
+        type: Sequelize.DATE,
         allowNull: false,
       },
       banner_type: { //notice, event
