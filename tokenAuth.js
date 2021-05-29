@@ -14,11 +14,12 @@ module.exports = async function (req, res, next) {
           req.userInfo = data;
           console.log(data);
           next();
-      }catch (err){
+      } catch (err){
           res.status(500).json(err);
           next();
       }
   } else {
+      console.log("이미지 저장 전 바디 : ",req.body)
       next();
   }
 }

@@ -10,7 +10,7 @@ const Op = Sequelize.Op;
 //공지,이벤트 등록 
 router.post('/', async (req,res,next) => {
     console.log('post /banner OK');
-    console.log(req.body);
+    console.log("이미지 처리 후 바디 : ",req.body)
     try {
         await Banner.create({
             startDate: req.body.startDate,
@@ -81,6 +81,8 @@ router.get('/', async (req,res,next) => {
 router.patch('/:id', async (req,res,next) => {
     console.log('patch /banner OK')
     try {
+        console.log("이미지 처리 후 바디 : ", req.body)
+        console.log(typeof(req.body.file))
         await Banner.update({
             startDate: req.body.startDate,
             endDate: req.body.endDate,
