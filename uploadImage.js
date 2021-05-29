@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require("multer");
 const Banner = require('./models/banner');
 const Product = require('./models/product');
+var moment = require('moment');
 
 // multer-optional
 var storage = multer.diskStorage({
@@ -69,9 +70,8 @@ router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
         updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
     }, {
         where : {p_id : req.params.p_id}
-    }
-  )
-  return res.status(200).json(product);
+    })
+    return res.status(200).json(product);
   }
   else { 
     req.body.file = req.file.path
