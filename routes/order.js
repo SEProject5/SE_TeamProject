@@ -16,10 +16,11 @@ router.post('/', async (req, res) => {
             user_id: req.body[0].user_id,
             totalPrice : req.body[0].totalPrice,
             order_state: req.body[0].order_state,
-            coupon_id : req.body[0].coupon_id,
+            
             createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
+        console.log("3");
         let order_detail = req.body[0].order_detail;
         for(var a in order_detail){
             let product = await Product.findOne({where : {p_id : order_detail[a].p_id}})
