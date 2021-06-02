@@ -5,7 +5,7 @@ module.exports = class Cart extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             cartSeq: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING(20),
                 primaryKey: true,
                 autoIncrement: true,
             },
