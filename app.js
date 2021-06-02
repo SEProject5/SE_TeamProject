@@ -12,7 +12,7 @@ const { sequelize } = require('./models');
 const app = express();
 
 app.set('port', process.env.PORT || 3001);
-sequelize.sync({ force: false }) //force가 True이면 서버 실행 시마다 테이블 재생성
+sequelize.sync({ force: false}) //force가 True이면 서버 실행 시마다 테이블 재생성
   .then(() => {
     console.log('데이터베이스 연결 성공');
   })
@@ -48,6 +48,7 @@ const couponRouter = require('./routes/coupon');
 const qnaRouter = require('./routes/qna');
 const reviewRouter = require('./routes/review');
 const uploadImg = require('./uploadImage');
+const orderRouter = require('./routes/order')
 
 app.use('/', indexRouter);
 app.use('/', uploadImg);
@@ -62,6 +63,7 @@ app.use('/comment',commentRouter)
 app.use('/coupon',couponRouter)
 app.use('/qna',qnaRouter)
 app.use('/review',reviewRouter)
+app.use('/order', orderRouter);
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
