@@ -29,7 +29,10 @@ module.exports = class Product extends Sequelize.Model {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
-      file1: {
+      file: {
+        type: Sequelize.STRING(1000),
+      },
+      /*file1: {
         type: Sequelize.STRING(1000),
       },
       file2: {
@@ -37,6 +40,11 @@ module.exports = class Product extends Sequelize.Model {
       },
       file3: {
         type: Sequelize.STRING(1000),
+      },*/
+      delivery_cost: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: true
       },
       exist: {
         type: Sequelize.INTEGER,
@@ -54,6 +62,6 @@ module.exports = class Product extends Sequelize.Model {
   }
 
   static associate(db) {
-    db.Product.hasMany(db.Cart, { foreignKey: 'productSeq', sourceKey: 'p_id' });
+    //db.Product.hasMany(db.Cart, { foreignKey: 'productSeq', sourceKey: 'p_id' });
   }
 };

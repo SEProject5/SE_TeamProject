@@ -50,14 +50,58 @@ router.patch("/banner/:id", upload.single('img'), async(req, res, next) => {
   next();
 });
 
+router.post("/product", upload.single('img'), async(req, res, next) => {
+  console.log('img middle OK');
+  console.log("이미지 저장 후 바디 : ",req.body)
+  req.body.file = req.file.path
+  next();
+});
+
+router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
+  console.log('img middle OK');
+  console.log(req.body);
+  if( req.body.img ) {
+      let product = await Product.update({
+        p_name: req.body.p_name,
+        description: req.body.description,
+        categoryName: req.body.categoryName,
+        price: req.body.price,
+        stock: req.body.stock,
+        file: req.body.file,
+        /*file1: req.body.file1,
+        file2: req.body.file2,
+        file3: req.body.file3,*/
+        delivery_cost: req.body.delivery_cost,
+        exist : 1,
+        updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }, {
+        where : {p_id : req.params.p_id}
+    })
+  return res.status(200).json(product);
+    }
+  else { 
+    req.body.file = req.file.path
+  }
+  next();
+});
+
+/*
 router.post("/product", upload.array('img'), async(req, res, next) => {
   console.log('img middle OK');
-  console.log(req.files[0].path)
-  console.log(req.files[1].path)
-  console.log(req.files[2].path)
+  console.log(req.files);
   req.body.file1 = req.files[0].path
   req.body.file2 = req.files[1].path
   req.body.file3 = req.files[2].path
+  if(req.files[1].path === undefined) {
+    req.body.file2 = null
+  } else {
+    req.body.file2 = req.files[1].path
+  }
+  if(req.files[2].path === undefined) {
+    req.body.file3 = null
+  } else {
+    req.body.file3 = req.files[2].path
+  }
   next();
 });
 
@@ -84,6 +128,6 @@ router.patch("/product/:p_id", upload.array('img', 3), async(req, res, next) => 
     req.body.file3 = req.files[2].path
   }
   next();
-});
+});*/
 
 module.exports = router;

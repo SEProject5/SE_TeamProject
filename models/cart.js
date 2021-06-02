@@ -35,6 +35,6 @@ module.exports = class Cart extends Sequelize.Model {
     }
 
     static associate(db) {
-        db.Cart.belongsTo(db.Product, { foreignKey: 'productSeq', targetKey: 'p_id' });
+        //db.Cart.belongsTo(db.Product, { foreignKey: 'productSeq', targetKey: 'p_id' });
     }
 };
