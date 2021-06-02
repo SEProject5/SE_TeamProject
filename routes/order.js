@@ -12,6 +12,11 @@ moment.tz.setDefault("Asia/Seoul");
 router.post('/', async (req, res) => {
     try{
         console.log("post /order success");
+        console.log(req.body);
+        console.log(req.body[0].user_id);
+        console.log(req.body[0].totalPrice)
+        console.log(req.body[0].order_state)
+        console.log(req.body[0].coupon_id)
         let order = await Order.create({
             user_id: req.body[0].user_id,
             totalPrice : req.body[0].totalPrice,
