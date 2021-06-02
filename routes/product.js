@@ -175,17 +175,9 @@ router.patch('/:p_id', async (req, res, next)=> {
 })
 
 //delete
-router.delete('/:p_id', async (req, res, next) => {
+router.patch('/delete/:p_id', async (req, res, next) => {
     try{
         let product = await Product.update({
-            p_name: req.body.p_name,
-            description: req.body.description,
-            categoryName: req.body.categoryName,
-            price: req.body.price,
-            stock: req.body.stock,
-            file1: req.body.file1,
-            file2: req.body.file2,
-            file3: req.body.file3,
             exist : 0,
             deletedAt: moment().format('YYYY-MM-DD HH:mm:ss')
         },{
