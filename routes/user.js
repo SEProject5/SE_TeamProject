@@ -76,7 +76,7 @@ router.get('/:id', async (req, res, next) => {
 
 //유저 정보 수정하기
 router.patch('/:id', async (req, res, next) => {
-    if(req.userInfo && (req.userInfo.user_type === 'admin' || ( req.userInfo.id === req.params.id))) {
+    //if(req.userInfo && (req.userInfo.user_type === 'admin' || ( req.userInfo.id === req.params.id))) {
         console.log('patch /user OK');
         try {
             if (chk_password.test(req.body.password) === false) {
@@ -97,9 +97,9 @@ router.patch('/:id', async (req, res, next) => {
         } catch (err) {
             return res.status(400).json(err);
         } 
-    } else {
-        res.status(403).send({"message" : "접근 권한이 없습니다."});
-    }
+    //} else {
+    //    res.status(403).send({"message" : "접근 권한이 없습니다."});
+    //}
 });
 
 //유저 삭제하기
