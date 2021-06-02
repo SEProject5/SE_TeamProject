@@ -5,12 +5,12 @@ module.exports = class Cart extends Sequelize.Model {
     static init(sequelize) {
         return super.init({
             cartSeq: {
-                type: Sequelize.STRING(20),
+                type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
             },
             userSeq: { //유저id
-                type: Sequelize.INTEGER,
+                type: Sequelize.STRING(20),
             },
             productSeq: { //상품id
                 type: Sequelize.INTEGER,
