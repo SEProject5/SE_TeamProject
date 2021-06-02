@@ -6,6 +6,7 @@ module.exports = class Coupon extends Sequelize.Model {
             coupon_id: {
                 type: Sequelize.INTEGER,
                 primaryKey: true,
+                autoIncrement: true,
             },
             coupon_type: { // 1: X원 이상 구매시 Y원이 할인, 2: 특정 카테고리 상품 구매시, 할인 한도 Y원 내에서 X%가 할인되는 쿠폰
                 type: Sequelize.INTEGER,
