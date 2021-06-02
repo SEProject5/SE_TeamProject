@@ -33,10 +33,8 @@ router.get('/sort', async (req, res, next) => {
     let orderPrice = req.query.orderPrice;   //order~~ : "ASC", "DESC"   or 0;
     let orderName = req.query.orderName;
     let orderTime = req.query.orderTime;
-    let lowPrice = req.body.lowPrice;       //defult 0~~ 큰값
-    let highPrice = req.body.highPrice;
-    if(!req.body.lowPrice) lowPrice =0;
-    if(!req.body.highPrice) highPrice = 9999999;
+    let lowPrice = req.params.lowPrice;       //defult 0~~ 큰값
+    let highPrice = req.params.highPrice;
     console.log("lowPrice : " + lowPrice);
     console.log("highPrice : " +highPrice);
     let product;
@@ -77,7 +75,7 @@ router.get('/sort', async (req, res, next) => {
 })
 // 등록된 product 보기
 router.get('/', async (req, res, next) => {
-    console.log("get");
+    console.log("get success");
     try{
         let products = await Product.findAll({where : {exist : 1}});
         return res.status(200).json(products);
