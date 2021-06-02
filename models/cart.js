@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const Product = require('./product');
 
 module.exports = class Cart extends Sequelize.Model {
     static init(sequelize) {
@@ -8,22 +9,17 @@ module.exports = class Cart extends Sequelize.Model {
                 primaryKey: true,
                 autoIncrement: true,
             },
-            userSeq: {
+            userSeq: { //유저id
                 type: Sequelize.INTEGER,
             },
-            productSeq: {
+            productSeq: { //상품id
                 type: Sequelize.INTEGER,
+                reference: {
+                    model: Product,
+                    key: 'p_id',
+                }
             },
-            price: {
-                type: Sequelize.INTEGER,
-            },
-            p_name: {
-                type: Sequelize.STRING(45),
-            },
-            file: {
-                type: Sequelize.STRING(45),
-            },
-            productNum: {
+            productNum: { //갯수
                 type: Sequelize.INTEGER,
             }
         }, {
@@ -38,5 +34,7 @@ module.exports = class Cart extends Sequelize.Model {
         });
     }
 
-    static associate(db) {}
+    static associate(db) {
+        db.Cart.belongsTo(db.Product, { foreignKey: 'productSeq', targetKey: 'p_id' });
+    }
 };

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Cart = require('../models/cart');
+const Product = require('../models/product');
 const app = express();
 
 
@@ -9,9 +10,6 @@ router.post('/', async (req, res, next) => {
         let cart = await Cart.create({
             userSeq: req.body.userSeq,
             productSeq: req.body.productSeq,
-            price: req.body.price,
-            p_name: req.body.p_name,
-            file: req.body.file,
             productNum: req.body.productNum,
         });
         return res.status(200).json(cart);
@@ -22,7 +20,15 @@ router.post('/', async (req, res, next) => {
 
 router.get('/:user_id', async (req, res, next) => {
     try {
-        let cart = await Cart.findAll({where: {userSeq: req.params.user_id},});
+        let cart = await Cart.findAll({
+            where: {userSeq: req.params.user_id},
+            include: [
+                {
+                    model: Product,
+                    attributes: ['p_name','categoryName','price','file1'],
+                }
+            ],
+        });
         return res.status(200).json(cart);
     } catch (err) {
         return res.status(500).json(err);
@@ -31,12 +37,7 @@ router.get('/:user_id', async (req, res, next) => {
 
 router.patch('/:cartSeq', async (req, res, next) => {
     try {
-        let cart = await Cart.update({
-                userSeq: req.body.userSeq,
-                productSeq: req.body.productSeq,
-                price: req.body.price,
-                p_name: req.body.p_name,
-                file: req.body.file,
+            let cart = await Cart.update({
                 productNum: req.body.productNum,
             },
             {

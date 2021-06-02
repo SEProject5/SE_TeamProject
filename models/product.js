@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const Cart = require('./cart');
 
 module.exports = class Product extends Sequelize.Model {
   static init(sequelize) {
@@ -52,5 +53,7 @@ module.exports = class Product extends Sequelize.Model {
     });
   }
 
-  static associate(db) {}
+  static associate(db) {
+    db.Product.hasMany(db.Cart, { foreignKey: 'productSeq', sourceKey: 'p_id' });
+  }
 };

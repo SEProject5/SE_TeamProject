@@ -44,7 +44,7 @@ router.post('/join', async (req, res, next) => {
 });
 
 //아이디 확인 라우터
-router.get('/join/checkId', async (req, res, next) => {
+router.post('/join/checkId', async (req, res, next) => {
   try {
     const exUser = await User.findOne({ where: { id: req.body.id } });
     if (exUser) { //id가 존재하면 
@@ -58,7 +58,7 @@ router.get('/join/checkId', async (req, res, next) => {
 });
 
 //이메일 확인 라우터
-router.get('/join/checkEmail', async (req, res, next) => {
+router.post('/join/checkEmail', async (req, res, next) => {
   try {
     const exUser = await User.findOne({ where: { email: req.body.email } });
     if (exUser) { //id가 존재하면 
