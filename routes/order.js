@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
             user_id: req.body[0].user_id,
             totalPrice : req.body[0].totalPrice,
             order_state: req.body[0].order_state,
-            
+            coupon_id : req.body[0].coupon_id,
             createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
