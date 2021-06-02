@@ -42,7 +42,7 @@ router.patch('/:review_id', async (req,res,next) => {
             recomend: req.body.recomend,
             delivery: req.body.delivery,
             score: req.body.score,
-            coment: req.body.coment,
+            comment: req.body.comment,
         },
         {
             where: {review_id: req.params.review_id},
