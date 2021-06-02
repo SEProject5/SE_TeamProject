@@ -82,6 +82,50 @@ router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
   next();
 });
 
+// /*
+// router.post("/product", upload.array('img'), async(req, res, next) => {
+//   console.log('img middle OK');
+//   console.log(req.files);
+//   req.body.file1 = req.files[0].path
+//   req.body.file2 = req.files[1].path
+//   req.body.file3 = req.files[2].path
+//   if(req.files[1].path === undefined) {
+//     req.body.file2 = null
+//   } else {
+//     req.body.file2 = req.files[1].path
+//   }
+//   if(req.files[2].path === undefined) {
+//     req.body.file3 = null
+//   } else {
+//     req.body.file3 = req.files[2].path
+//   }
+//   next();
+// });
+//
+// router.patch("/product/:p_id", upload.array('img', 3), async(req, res, next) => {
+//   console.log('img middle OK');
+//   if( req.body.img ) {
+//     console.log("이미지 수정X")
+//       let product = await Product.update({
+//         p_name: req.body.p_name,
+//         description: req.body.description,
+//         categoryName: req.body.categoryName,
+//         price: req.body.price,
+//         stock: req.body.stock,
+//         exist : 1,
+//         updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+//     }, {
+//         where : {p_id : req.params.p_id}
+//     })
+//     return res.status(200).json(product);
+//   }
+//   else {
+//     req.body.file1 = req.files[0].path
+//     req.body.file2 = req.files[1].path
+//     req.body.file3 = req.files[2].path
+//   }
+//   next();
+// });*/
 /*
 router.post("/product", upload.array('img'), async(req, res, next) => {
   console.log('img middle OK');
