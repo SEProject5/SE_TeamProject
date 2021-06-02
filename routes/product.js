@@ -29,12 +29,12 @@ router.get('/search', async (req, res, next) => {
 })
 
 // let product = req.body;
-router.get('/sort', async (req, res, next) => {
+router.post('/sort', async (req, res, next) => {
     let orderPrice = req.query.orderPrice;   //order~~ : "ASC", "DESC"   or 0;
     let orderName = req.query.orderName;
     let orderTime = req.query.orderTime;
-    let lowPrice = req.params.lowPrice;       //defult 0~~ 큰값
-    let highPrice = req.params.highPrice;
+    let lowPrice = req.body.lowPrice;       //defult 0~~ 큰값
+    let highPrice = req.body.highPrice;
     console.log("lowPrice : " + lowPrice);
     console.log("highPrice : " +highPrice);
     let product;
