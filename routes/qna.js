@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const QnA = require('../models/qna');
+const Comment = require('../models/comment');
 
 //QnA 등록
 router.post('/', async (req,res,next) => {
@@ -10,7 +11,6 @@ router.post('/', async (req,res,next) => {
             user_id: req.body.user_id,
             title: req.body.title,
             contents: req.body.contents,
-            isAnswer: req.body.qna,
         });
         return res.status(200).json(qna);
     } catch (err) {
@@ -22,7 +22,7 @@ router.post('/', async (req,res,next) => {
 router.get('/:user_id', async (req,res,next) => {
     console.log('get /qna OK');
     try {
-        const qna = await Review.findAll({
+        const qna = await QnA.findAll({
             where: {user_id: req.params.user_id},
         });
         return res.json(qna);
@@ -38,7 +38,6 @@ router.patch('/:qna_id', async (req,res,next) => {
         const qna = await QnA.update({
             title: req.body.title,
             contents: req.body.contents,
-            isAnswer: req.body.qna,
         },
         {
             where: {qna_id: req.params.qna_id},

@@ -62,6 +62,6 @@ module.exports = class Product extends Sequelize.Model {
   }
 
   static associate(db) {
-    //db.Product.hasMany(db.Cart, { foreignKey: 'productSeq', sourceKey: 'p_id' });
+      db.Product.hasMany(db.Cart, { foreignKey: 'productSeq', sourceKey: 'p_id' });
   }
 };

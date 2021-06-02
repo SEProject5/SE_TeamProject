@@ -11,6 +11,7 @@ const Category = require('./category');
 const Coupon = require('./coupon');
 const Review = require('./review');
 const QnA = require('./qna');
+const Comment = require('./comment');
 
 const db = {};
 const sequelize = new Sequelize(
@@ -28,6 +29,7 @@ db.Category = Category;
 db.Coupon = Coupon;
 db.Review = Review;
 db.QnA = QnA;
+db.Comment = Comment;
 
 User.init(sequelize);
 Banner.init(sequelize);
@@ -39,6 +41,7 @@ Category.init(sequelize);
 Coupon.init(sequelize);
 Review.init(sequelize);
 QnA.init(sequelize);
+Comment.init(sequelize);
 
 User.associate(db);
 Banner.associate(db);
@@ -50,5 +53,6 @@ Category.associate(db);
 Coupon.associate(db);
 Review.associate(db);
 QnA.associate(db);
+Comment.associate(db);
 
 module.exports = db;
