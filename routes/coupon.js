@@ -1,5 +1,4 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
 const Coupon = require('../models/coupon');
 
@@ -15,7 +14,7 @@ router.post('/', async (req,res,next) => {
             sale_condition_price: req.body.sale_condition_price,
             sale_condition_cat: req.body.sale_condition_cat,
         });
-        if(coupon.coupon_type == 1) {
+        /*if(coupon.coupon_type == 1) {
             coupon = await Coupon.findOne({
                 attributes: ['coupon_id','coupon_type','sale_price','sale_condition_price'],
                 where: {coupon_id: coupon.coupon_id},
@@ -25,7 +24,7 @@ router.post('/', async (req,res,next) => {
                 attributes: ['coupon_id', 'coupon_type', 'sale_percent', 'sale_price_limit', 'sale_condition_cat'],
                 where: {coupon_id: coupon.coupon_id},
             });
-        }
+        } */
         return res.status(200).json(coupon);
     } catch (err) {
         return res.status(500).json(err);
@@ -84,7 +83,7 @@ router.delete('/:coupon_id', async (req,res,next) => {
         await Coupon.destroy({
             where: {coupon_id: req.params.coupon_id},
         });
-        return res.status(200).send(`배송지가 삭제되었습니다.`);
+        return res.status(200).send(`쿠폰이 삭제되었습니다.`);
     } catch (err) {
         return res.status(500).json(err);
     }

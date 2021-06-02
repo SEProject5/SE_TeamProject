@@ -32,7 +32,7 @@ module.exports = class Review extends Sequelize.Model {
                 type: Sequelize.INTEGER,
                 allowNull: false,
             },
-            coment: {
+            comment: {
                 type: Sequelize.STRING(100),
                 allowNull: false,
             },

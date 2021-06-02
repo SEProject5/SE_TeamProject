@@ -19,7 +19,6 @@ module.exports = async function (req, res, next) {
           next();
       }
   } else {
-      console.log(req)
       next();
   }
 }

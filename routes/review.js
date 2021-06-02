@@ -13,7 +13,7 @@ router.post('/', async (req,res,next) => {
             recomend: req.body.recomend,
             delivery: req.body.delivery,
             score: req.body.score,
-            coment: req.body.coment,
+            comment: req.body.comment,
         });
         return res.status(200).json(review);
     } catch (err) {
@@ -55,9 +55,9 @@ router.patch('/:review_id', async (req,res,next) => {
 
 //리뷰 삭제
 router.delete('/:review_id', async (req,res,next) => {
-    console.log('delete /reviewn OK')
+    console.log('delete /review OK')
     try {
-        await Coupon.destroy({
+        await Review.destroy({
             where: {review_id: req.params.review_id},
         });
         return res.status(200).send(`리뷰가 삭제되었습니다.`);

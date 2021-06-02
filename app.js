@@ -43,6 +43,10 @@ const cartRouter = require('./routes/cart');
 const authRouter = require('./routes/auth');
 const bannerRouter = require('./routes/banner');
 const deliverAddressRouter = require('./routes/deliver_address');
+const commentRouter = require('./routes/comment');
+const couponRouter = require('./routes/coupon');
+const qnaRouter = require('./routes/qna');
+const reviewRouter = require('./routes/review');
 const uploadImg = require('./uploadImage');
 const orderRouter = require('./routes/order')
 
@@ -55,8 +59,11 @@ app.use('/cart', cartRouter);
 app.use('/auth',authRouter);
 app.use('/banner',bannerRouter)
 app.use('/deliver_address',deliverAddressRouter)
+app.use('/comment',commentRouter)
+app.use('/coupon',couponRouter)
+app.use('/qna',qnaRouter)
+app.use('/review',reviewRouter)
 app.use('/order', orderRouter);
-
 
 app.use((req, res, next) => {
   const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
