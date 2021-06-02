@@ -8,6 +8,7 @@ const DeliverAddress = require('./deliver_address');
 const Order = require('./order');
 const Cart = require('./cart');
 const Category = require('./category');
+const Coupon = require('./coupon');
 
 const db = {};
 const sequelize = new Sequelize(
@@ -22,6 +23,7 @@ db.DeliverAddress = DeliverAddress;
 db.Order = Order;
 db.Cart = Cart;
 db.Category = Category;
+db.Coupon = Coupon;
 
 User.init(sequelize);
 Banner.init(sequelize);
@@ -30,6 +32,7 @@ DeliverAddress.init(sequelize);
 Order.init(sequelize);
 Cart.init(sequelize);
 Category.init(sequelize);
+Coupon.init(sequelize);
 
 User.associate(db);
 Banner.associate(db);
@@ -38,5 +41,6 @@ DeliverAddress.associate(db);
 Order.associate(db);
 Cart.associate(db);
 Category.associate(db);
+Coupon.associate(db);
 
 module.exports = db;

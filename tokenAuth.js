@@ -19,7 +19,6 @@ module.exports = async function (req, res, next) {
           next();
       }
   } else {
-      console.log("이미지 저장 전 바디 : ",req.body)
       next();
   }
 }

@@ -139,7 +139,9 @@ router.post('/', async (req, res, next) => {
             categoryName: req.body.categoryName,
             price: req.body.price,
             stock: req.body.stock,
-            file: req.body.file,
+            file1: req.body.file1,
+            file2: req.body.file2,
+            file3: req.body.file3,
             exist : 1,
         });
         console.log(product);
@@ -159,7 +161,9 @@ router.patch('/:p_id', async (req, res, next)=> {
                 categoryName: req.body.categoryName,
                 price: req.body.price,
                 stock: req.body.stock,
-                file: req.body.file,
+                file1: req.body.file1,
+                file2: req.body.file2,
+                file3: req.body.file3,
                 exist : 1,
                 updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
             }, {
@@ -181,7 +185,9 @@ router.delete('/:p_id', async (req, res, next) => {
             categoryName: req.body.categoryName,
             price: req.body.price,
             stock: req.body.stock,
-            file: req.body.file,
+            file1: req.body.file1,
+            file2: req.body.file2,
+            file3: req.body.file3,
             exist : 0,
             deletedAt: moment().format('YYYY-MM-DD HH:mm:ss')
         },{

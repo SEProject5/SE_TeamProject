@@ -28,7 +28,13 @@ module.exports = class Product extends Sequelize.Model {
         type: Sequelize.INTEGER,
         allowNull: true,
       },
-      file: {
+      file1: {
+        type: Sequelize.STRING(1000),
+      },
+      file2: {
+        type: Sequelize.STRING(1000),
+      },
+      file3: {
         type: Sequelize.STRING(1000),
       },
       exist: {

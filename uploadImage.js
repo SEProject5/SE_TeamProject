@@ -50,16 +50,21 @@ router.patch("/banner/:id", upload.single('img'), async(req, res, next) => {
   next();
 });
 
-router.post("/product", upload.single('img'), async(req, res, next) => {
+router.post("/product", upload.array('img'), async(req, res, next) => {
   console.log('img middle OK');
-  console.log(req.file)
-  req.body.file = req.file.path
+  console.log(req.files[0].path)
+  console.log(req.files[1].path)
+  console.log(req.files[2].path)
+  req.body.file1 = req.files[0].path
+  req.body.file2 = req.files[1].path
+  req.body.file3 = req.files[2].path
   next();
 });
 
-router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
+router.patch("/product/:p_id", upload.array('img', 3), async(req, res, next) => {
   console.log('img middle OK');
-  if( req.body.img ) {
+  if( req.body.img ) { 
+    console.log("이미지 수정X")
       let product = await Product.update({
         p_name: req.body.p_name,
         description: req.body.description,
@@ -74,7 +79,9 @@ router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
     return res.status(200).json(product);
   }
   else { 
-    req.body.file = req.file.path
+    req.body.file1 = req.files[0].path
+    req.body.file2 = req.files[1].path
+    req.body.file3 = req.files[2].path
   }
   next();
 });
