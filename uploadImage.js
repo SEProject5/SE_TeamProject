@@ -68,9 +68,6 @@ router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
         price: req.body.price,
         stock: req.body.stock,
         file: req.body.file,
-        /*file1: req.body.file1,
-        file2: req.body.file2,
-        file3: req.body.file3,*/
         delivery_cost: req.body.delivery_cost,
         exist : 1,
         updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -89,21 +86,24 @@ router.patch("/product/:p_id", upload.single('img'), async(req, res, next) => {
 router.post("/product", upload.array('img'), async(req, res, next) => {
   console.log('img middle OK');
   console.log(req.files);
-  req.body.file1 = req.files[0].path
-  req.body.file2 = req.files[1].path
-  req.body.file3 = req.files[2].path
-  if(req.files[1].path === undefined) {
+  console.log(req.files);
+  if(!req.files[0]) {
+    req.body.file1 = null
+  } else {
+    req.body.file1 = req.files[0].path
+  }
+  if(!req.files[1]) {
     req.body.file2 = null
   } else {
     req.body.file2 = req.files[1].path
   }
-  if(req.files[2].path === undefined) {
+  if(!req.files[2]) {
     req.body.file3 = null
   } else {
     req.body.file3 = req.files[2].path
   }
   next();
-});
+}); 
 
 router.patch("/product/:p_id", upload.array('img', 3), async(req, res, next) => {
   console.log('img middle OK');
@@ -123,11 +123,23 @@ router.patch("/product/:p_id", upload.array('img', 3), async(req, res, next) => 
     return res.status(200).json(product);
   }
   else { 
-    req.body.file1 = req.files[0].path
-    req.body.file2 = req.files[1].path
-    req.body.file3 = req.files[2].path
+    if(!req.files[0]) {
+      req.body.file1 = null
+    } else {
+      req.body.file1 = req.files[0].path
+    }
+    if(!req.files[1]) {
+      req.body.file2 = null
+    } else {
+      req.body.file2 = req.files[1].path
+    }
+    if(!req.files[2]) {
+      req.body.file3 = null
+    } else {
+      req.body.file3 = req.files[2].path
+    }
   }
   next();
-});*/
+}); */
 
 module.exports = router;
