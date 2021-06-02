@@ -9,7 +9,7 @@ const Op = Sequelize.Op;
 router.post('/', async (req,res,next) => {
     console.log('post /deliver_address OK');
     try {
-        await DeliverAddress.create({
+        let deliver_address = await DeliverAddress.create({
             user_id: req.body.user_id,
             address_name: req.body.address_name,
             receiver_phone: req.body.receiver_phone,
@@ -17,10 +17,6 @@ router.post('/', async (req,res,next) => {
             address: req.body.address,
             address_detail: req.body.address_detail,
             address_type: req.body.address_type,
-        });
-        const deliver_address = await DeliverAddress.findOne({
-            attributes: ['id','user_id','address_name','receiver_phone','zip_code', 'address','address_detail','address_type'],
-            where: {[Op.and]: [{title: req.body.title},{address_name: req.body.address_name}]},
         });
         return res.status(200).json(deliver_address);
     } catch (err) {
