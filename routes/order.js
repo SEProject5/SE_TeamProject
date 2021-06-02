@@ -16,6 +16,7 @@ router.post('/', async (req, res) => {
             user_id: req.body[0].user_id,
             totalPrice : req.body[0].totalPrice,
             order_state: req.body[0].order_state,
+            coupon_id : req.body[0].coupon_id,
             createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
             updatedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
         })
@@ -45,6 +46,7 @@ router.get('/', async (req, res) => {
         return res.status(400).json(err);
     }
 })
+
 router.get('/:order_id', async (req, res) => {
     try {
         console.log("get order/order_id");
@@ -62,6 +64,7 @@ router.get('/:order_id', async (req, res) => {
     }
 })
 
+
 router.get('/order_detail/:order_detail_id', async (req, res) => {
     try {
         let orderDetail =  await OrderDetail.findAll({
@@ -76,5 +79,7 @@ router.get('/order_detail/:order_detail_id', async (req, res) => {
         return res.status(400).json(err);
     }
 })
+
+
 
 module.exports = router;

@@ -19,6 +19,10 @@ module.exports = class Order extends Sequelize.Model {
             },
             order_state: { //결제완료, 배송중, 배송완료, 구매확정
                 type: Sequelize.STRING(10),
+            },
+            coupon_id : {
+                type : Sequelize.INTEGER,
+                allowNull : true,
             }
         }, {
             sequelize,

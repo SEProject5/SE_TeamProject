@@ -12,7 +12,6 @@ const Coupon = require('./coupon');
 const Review = require('./review');
 const QnA = require('./qna');
 const Comment = require('./comment');
-const Order = require('./order');
 const OrderDetail = require('./order_detail');
 
 const db = {};
