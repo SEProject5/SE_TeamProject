@@ -5,6 +5,7 @@ const User = require('./user');
 const Banner = require('./banner');
 const Product = require('./product');
 const DeliverAddress = require('./deliver_address');
+const Order = require('./order');
 const Cart = require('./cart');
 const Category = require('./category');
 const Coupon = require('./coupon');
